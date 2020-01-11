@@ -113,7 +113,7 @@
 <meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-37-09.png">
 <meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-37-52.png">
 <meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-38-31.png">
-<meta property="og:updated_time" content="2020-01-11T13:43:06.400Z">
+<meta property="og:updated_time" content="2020-01-11T13:57:50.581Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="某钓鱼样本分析">
 <meta name="twitter:image" content="https://i.loli.net/2020/01/11/C4BXY6xslQebGvF.jpg">
@@ -407,7 +407,7 @@
 <p><img src="/images/ScreenShot_20191222012028.png" alt><br>使用WScript.Shell运行msxsl.exe执行28851D604F592.txt</p>
 <h2 id="28851D604F592-txt文件分析-jscript文件"><a href="#28851D604F592-txt文件分析-jscript文件" class="headerlink" title="28851D604F592.txt文件分析(jscript文件)"></a>28851D604F592.txt文件分析(jscript文件)</h2><p>这个文件是主要代码它的混淆比较严重<br><img src="/images/ScreenShot_20191223223605.png" alt><br>这两行是被加密的核心代码其中第二行的代码为rat代码，第一行的代码是用来解密第二行的。它加密算法应该是自己写的，js里解密函数差不多占整个文件的一半</p>
 <p>28851D604F592.txt这个文件是由342.ocx动态生成，而上面第二行加密的代码的密钥由342.ocx在运行时获取的用户名 PC名 处理器ID，然后把这三个值进行处理后作为密钥来加密rat核心代码，而上面的第一行代码在被解密执行后会在运行时会获取这三个值去解密rat核心代码然后启动rat核心代码</p>
-<p>首先调用解密函数gsdxqk072433解密gsdxqk072433变量<br><img src="/images/ScreenShot_20191223230051.png" alt><br>然后调用gsdxqk352函数执行解密后的代码<br><img src="/images/ScreenShot_20191223230557.png" alt><br>现在我们转到被解密的第一行代码，这里放出关键部分<br><img src="/images/ScreenShot_20191223231338.png" alt><br>其中gsdxqk535函数可以很明显的看出是用来获取pc名 用户名 处理器id这三个值的<br><img src="/images/ScreenShot_20191223231507.png" alt><br>然后让我们往下看<br><img src="/images/20191223231917.png" alt><br>可以看到在使用密钥对gsdxqk379459变量进行解密并且在使用gsdxqk352函数去执行解密后的代码</p>
+<p>首先调用解密函数gsdxqk072433解密gsdxqk1444变量<br><img src="/images/ScreenShot_20191223230051.png" alt><br>然后调用gsdxqk352函数执行解密后的代码<br><img src="/images/ScreenShot_20191223230557.png" alt><br>现在我们转到被解密的第一行代码，这里放出关键部分<br><img src="/images/ScreenShot_20191223231338.png" alt><br>其中gsdxqk535函数可以很明显的看出是用来获取pc名 用户名 处理器id这三个值的<br><img src="/images/ScreenShot_20191223231507.png" alt><br>然后让我们往下看<br><img src="/images/20191223231917.png" alt><br>可以看到在使用密钥对gsdxqk379459变量进行解密并且在使用gsdxqk352函数去执行解密后的代码</p>
 <h2 id="rat核心代码"><a href="#rat核心代码" class="headerlink" title="rat核心代码"></a>rat核心代码</h2><p>现在我们来分析一下rat核心代码<br><img src="/images/ScreenShot_20191223233854.png" alt><br>文件开头主要是定义了一些变量留到后面使用</p>
 <p>看到那个Gete变量我感觉这个rat控制端应该是web开发的</p>
 <p>开始执行<br><img src="/images/Snipaste_2019-12-24_20-41-00.png" alt><br>基本是初始化一些变量然后调用check_inside检测一下js文件环境变量等等</p>
