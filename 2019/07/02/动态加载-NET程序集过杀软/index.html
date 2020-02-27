@@ -87,7 +87,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.loli.net/2019/07/02/5d1b61c9e15ea59133.jpg">
 <meta property="og:image" content="https://i.loli.net/2019/07/02/5d1b60965dc5197464.png">
-<meta property="og:updated_time" content="2019-07-02T13:53:47.623Z">
+<meta property="og:updated_time" content="2020-02-26T08:07:15.313Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="动态加载.NET程序集过杀软">
 <meta name="twitter:image" content="https://i.loli.net/2019/07/02/5d1b61c9e15ea59133.jpg">
@@ -355,11 +355,12 @@
         <p><img src="https://i.loli.net/2019/07/02/5d1b61c9e15ea59133.jpg" alt></p>
 <a id="more"></a>
 
-<p>动态加载.NET程序集这个东西应该也有不少人知道利用.NET反射实现动态的加载。<br>我在这里就随便写写分享一下思路。</p>
+<p>动态加载.NET程序集这个东西应该也有不少人知道利用.NET反射实现动态的加载。<br>我在这里就随便写写。</p>
 <p>利用这句就可以实现动态加载.NET的程序集</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Reflection.Assembly.Load().EntryPoint.Invoke(Nothing, Nothing)</span><br></pre></td></tr></table></figure>
 
 <p>首先我们可以通过网络传输.NET程序集这样是无法直接检测的，同时为了保证传输不被检测我们则可以使用加密分段传输的方式这样可以进一步保证免杀。然后在内存中将分段的程序集拼接随后解密加载执行达到绕过杀软的目的。<br>基本思路就是这样。<br><img src="https://i.loli.net/2019/07/02/5d1b60965dc5197464.png" alt></p>
+<p>关于shellcode同理也可以这样处理，具体免杀方法还是要结合目标环境情况等等一般情况主要是思路还是分离</p>
 
       
     </div>
