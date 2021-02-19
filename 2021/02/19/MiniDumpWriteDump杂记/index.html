@@ -91,7 +91,8 @@
 <meta property="og:image" content="https://i.loli.net/2021/02/19/d3LbmTAIJDUYco9.png">
 <meta property="og:image" content="https://i.loli.net/2021/02/19/1Zmavpq8SzjyJQo.png">
 <meta property="og:image" content="https://i.loli.net/2021/02/19/RzAEtGyqgNoTrb7.png">
-<meta property="og:updated_time" content="2021-02-19T10:07:20.722Z">
+<meta property="og:image" content="https://i.loli.net/2021/02/19/ZfLF7nlmNr6XudU.png">
+<meta property="og:updated_time" content="2021-02-19T10:35:31.667Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MiniDumpWriteDump杂记">
 <meta name="twitter:description" content="暂无图片">
@@ -371,7 +372,7 @@
         <p>暂无图片</p>
 <a id="more"></a>
 
-<p>为什么叫杂记主要是我词穷了好久没写博客了随便水水，因为一些原因需要临时写一个绕过AV dump lsass，直接用系统调用这种方法就不用说了，这种方法对于R3 HOOK还行。对于采用降权操作的AV来说这招没有</p>
+<p>为什么叫杂记主要是我词穷了好久没写博客了随便水水，因为一些原因需要临时写一个绕过AV dump lsass，直接用系统调用这种方法就不用说了，这种方法对于R3 HOOK还行。对于采用降权操作的AV来说这招没用</p>
 <p>我们需要用到的东西有某哈游驱动，ReactOS，VS，我们通过直接重写整个MiniDumpWriteDump函数（包括MiniDumpWriteDump内部调用的函数）将其所有的ReadVirtualMemory全部替换成我们自己利用驱动实现的“ReadVirtualMemory”</p>
 <p>为了方便可以使用这个项目中的部分代码<a href="https://github.com/w1u0u1/minidump" target="_blank" rel="noopener">https://github.com/w1u0u1/minidump</a><br>这个项目已经照着ReactOS重写了MiniDumpWriteDump函数的部分代码并且他部分函数如NtReadVirtualMemory，NtOpenProcess等等都使用了系统调用的方式重写，不过这对我们来说没什么用可以忽略直接改回正常的就行，因为他MiniDumpWriteDump函数重写的不完全，所以我们要做的就是补全剩下所有的函数并且将所有调用ReadVirtualMemory函数的地方替换成我们自己用驱动实现的ReadVirtualMemory</p>
 <p>具体举个例子<br>比如原作者重写了fetch_modules_info函数但是fetch_modules_info函数里调用的EnumerateLoadedModulesW64函数他就没有重写而我们就得重写因为这个函数里调用了ReadVirtualMemory</p>
@@ -393,6 +394,7 @@
 <p><a href="https://github.com/w1u0u1/minidump" target="_blank" rel="noopener">https://github.com/w1u0u1/minidump</a></p>
 <p><a href="https://www.unknowncheats.me/forum/anti-cheat-bypass/419457-mhyprot2-read-process-kernel-memory-valid-signature-driver.html" target="_blank" rel="noopener">https://www.unknowncheats.me/forum/anti-cheat-bypass/419457-mhyprot2-read-process-kernel-memory-valid-signature-driver.html</a></p>
 <p><a href="https://rayanfam.com/topics/reversing-windows-internals-part1/" target="_blank" rel="noopener">https://rayanfam.com/topics/reversing-windows-internals-part1/</a></p>
+<p><img src="https://i.loli.net/2021/02/19/ZfLF7nlmNr6XudU.png" alt="1613669921178.png"></p>
 
       
     </div>
@@ -514,7 +516,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -525,7 +527,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
