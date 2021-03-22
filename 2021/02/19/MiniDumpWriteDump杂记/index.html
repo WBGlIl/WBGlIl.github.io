@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/02/19/1Zmavpq8SzjyJQo.png">
 <meta property="og:image" content="https://i.loli.net/2021/02/19/RzAEtGyqgNoTrb7.png">
 <meta property="og:image" content="https://i.loli.net/2021/02/19/CTuWAM5zdnbXO9J.png">
-<meta property="og:updated_time" content="2021-02-20T03:03:29.711Z">
+<meta property="og:updated_time" content="2021-03-22T13:45:24.441Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MiniDumpWriteDump杂记">
 <meta name="twitter:description" content="暂无图片">
@@ -389,6 +389,7 @@
 <p>更多的细节都在源码和驱动中自己去看吧我也实在是懒的继续细写了</p>
 <p><a href="https://github.com/WBGlIl/mhydump" target="_blank" rel="noopener">https://github.com/WBGlIl/mhydump</a> bin文件在zip里因为是临时写的比较匆忙代码有些乱</p>
 <p>最后呢说几句题外话，dump lsass有必要dump全部内存和加载的模块吗，能不能将需要的部分dump下来这样可以大大减少dump文件的体积，这个问题就和mimikatz加载dump文件搜索hash密码相关了。我们重写MiniDumpWriteDump函数的目的是替换ReadVirtualMemory函数那么通过HOOK ReadVirtualMemory也能实现这样就省去了重写的步骤不必那么麻烦，什么时候重写MiniDumpWriteDump比较合适？什么时候HOOK MiniDumpWriteDump比较合适？dump文件头魔数是否有必要写入磁盘避免被部分AV识别到的</p>
+<p>顺便补充一点我这里用的是最简单粗暴的方法</p>
 <p>相关参考链接</p>
 <p><a href="https://reactos.org/" target="_blank" rel="noopener">https://reactos.org/</a></p>
 <p><a href="https://github.com/w1u0u1/minidump" target="_blank" rel="noopener">https://github.com/w1u0u1/minidump</a></p>
