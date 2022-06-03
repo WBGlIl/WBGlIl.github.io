@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Windows,二进制,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="暂无图片">
+<meta name="keywords" content="Windows,二进制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MiniDumpWriteDump杂记">
+<meta property="og:url" content="http://yoursite.com/2021/02/19/MiniDumpWriteDump杂记/index.html">
+<meta property="og:site_name" content="WBGlIl">
+<meta property="og:description" content="暂无图片">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2021/02/19/sA9OPvgki7ShHBo.png">
+<meta property="og:image" content="https://i.loli.net/2021/02/19/d3LbmTAIJDUYco9.png">
+<meta property="og:image" content="https://i.loli.net/2021/02/19/1Zmavpq8SzjyJQo.png">
+<meta property="og:image" content="https://i.loli.net/2021/02/19/RzAEtGyqgNoTrb7.png">
+<meta property="og:image" content="https://i.loli.net/2021/02/19/CTuWAM5zdnbXO9J.png">
+<meta property="og:updated_time" content="2021-03-22T13:45:24.441Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MiniDumpWriteDump杂记">
+<meta name="twitter:description" content="暂无图片">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/19/sA9OPvgki7ShHBo.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/02/19/MiniDumpWriteDump杂记/">
+
+
+
+
+
+  <title>MiniDumpWriteDump杂记 | WBGlIl</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WBGlIl</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/02/19/MiniDumpWriteDump杂记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WBGlIl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WBGlIl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MiniDumpWriteDump杂记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-19T00:14:08+08:00">
+                2021-02-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Windows/" itemprop="url" rel="index">
+                    <span itemprop="name">Windows</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Windows/二进制/" itemprop="url" rel="index">
+                    <span itemprop="name">二进制</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>暂无图片</p>
+<a id="more"></a>
+
+<p>为什么叫杂记主要是我词穷了好久没写博客了随便水水，因为一些原因需要临时写一个绕过AV dump lsass，直接用系统调用这种方法就不用说了，这种方法对于R3 HOOK还行。对于采用降权操作的AV来说这招没用</p>
+<p>我们需要用到的东西有某哈游驱动，ReactOS，VS，思路是我们通过直接重写整个MiniDumpWriteDump函数（包括MiniDumpWriteDump内部调用的函数），替换整个dump过程中所有使用ReadProcessMemory函数的地方，将ReadProcessMemory函数换成我们自己用驱动实现的进程内存读取</p>
+<p>为了方便可以使用这个项目中的部分代码<a href="https://github.com/w1u0u1/minidump" target="_blank" rel="noopener">https://github.com/w1u0u1/minidump</a><br>这个项目已经照着ReactOS重写了MiniDumpWriteDump函数的部分代码并且他部分函数如ReadProcessMemory，OpenProcess等等都使用了系统调用的方式重写，不过这对我们来说没什么用可以忽略直接改回正常的就行，因为他MiniDumpWriteDump函数重写的不完全，所以我们要做的就是补全剩下所有的函数并且将所有调用ReadProcessMemory函数的地方替换成我们自己用驱动实现的ReadProcessMemory</p>
+<p>具体举个例子<br>比如原作者重写了fetch_modules_info函数但是fetch_modules_info函数里调用的EnumerateLoadedModulesW64函数他就没有重写而我们就得重写因为这个函数里有别的函数调用了ReadProcessMemory</p>
+<p><img src="https://i.loli.net/2021/02/19/sA9OPvgki7ShHBo.png" alt="image.png"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL WINAPI <span class="title">my_EnumerateLoadedModulesW64</span><span class="params">(HANDLE hProcess,PENUMLOADED_MODULES_CALLBACKW64 EnumLoadedModulesCallback,PVOID UserContext)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	HMODULE*    hMods;</span><br><span class="line">	WCHAR       baseW[<span class="number">256</span>], modW[<span class="number">256</span>];</span><br><span class="line">	DWORD       i, sz;</span><br><span class="line">	MODULEINFO  mi;</span><br><span class="line"></span><br><span class="line">	hMods = (HMODULE*)HeapAlloc(GetProcessHeap(), <span class="number">0</span>, <span class="number">256</span> * <span class="keyword">sizeof</span>(hMods[<span class="number">0</span>]));</span><br><span class="line">	<span class="keyword">if</span> (!hMods) <span class="keyword">return</span> FALSE;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (!my_EnumProcessModules(hProcess, hMods, <span class="number">256</span> * <span class="keyword">sizeof</span>(hMods[<span class="number">0</span>]), &amp;sz))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">/* hProcess should also be a valid process handle !! */</span></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"If this happens, bump the number in mod\n"</span>);</span><br><span class="line">		HeapFree(GetProcessHeap(), <span class="number">0</span>, hMods);</span><br><span class="line">		<span class="keyword">return</span> FALSE;</span><br><span class="line">	&#125;</span><br><span class="line">	sz /= <span class="keyword">sizeof</span>(HMODULE);</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; sz; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (!myGetModuleInformation(hProcess, hMods[i], &amp;mi, <span class="keyword">sizeof</span>(mi)) ||</span><br><span class="line">			!myGetModuleBaseNameW(hProcess, hMods[i], baseW, ARRAY_SIZE(baseW)))</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		module_fill_module(baseW, modW, ARRAY_SIZE(modW));</span><br><span class="line">		EnumLoadedModulesCallback(modW, (DWORD_PTR)mi.lpBaseOfDll, mi.SizeOfImage,</span><br><span class="line">			UserContext);</span><br><span class="line">	&#125;</span><br><span class="line">	HeapFree(GetProcessHeap(), <span class="number">0</span>, hMods);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> sz != <span class="number">0</span> &amp;&amp; i == sz;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的因为EnumerateLoadedModulesW64函数内部调用了EnumProcessModules，GetModuleInformation，GetModuleBaseNameW这三个函数而这三个函数内部调用了ReadProcessMemory所以这三个函数也要重写</p>
+<p>替换如图所示</p>
+<p><img src="https://i.loli.net/2021/02/19/d3LbmTAIJDUYco9.png" alt="image.png"></p>
+<p>稍微要提一下的是这个驱动读内存没有对是否成功进行返回所以我们需要自己通过验证缓冲区值是否改变来以此当作一个判断标准</p>
+<p><img src="https://i.loli.net/2021/02/19/1Zmavpq8SzjyJQo.png" alt="image.png"></p>
+<p>这里我就拿卡巴做一下示范</p>
+<p><img src="https://i.loli.net/2021/02/19/RzAEtGyqgNoTrb7.png" alt="image.png"></p>
+<p>更多的细节都在源码和驱动中自己去看吧我也实在是懒的继续细写了</p>
+<p><a href="https://github.com/WBGlIl/mhydump" target="_blank" rel="noopener">https://github.com/WBGlIl/mhydump</a> bin文件在zip里因为是临时写的比较匆忙代码有些乱</p>
+<p>最后呢说几句题外话，dump lsass有必要dump全部内存和加载的模块吗，能不能将需要的部分dump下来这样可以大大减少dump文件的体积，这个问题就和mimikatz加载dump文件搜索hash密码相关了。我们重写MiniDumpWriteDump函数的目的是替换ReadVirtualMemory函数那么通过HOOK ReadVirtualMemory也能实现这样就省去了重写的步骤不必那么麻烦，什么时候重写MiniDumpWriteDump比较合适？什么时候HOOK MiniDumpWriteDump比较合适？dump文件头魔数是否有必要写入磁盘避免被部分AV识别到的</p>
+<p>顺便补充一点我这里用的是最简单粗暴的方法</p>
+<p>相关参考链接</p>
+<p><a href="https://reactos.org/" target="_blank" rel="noopener">https://reactos.org/</a></p>
+<p><a href="https://github.com/w1u0u1/minidump" target="_blank" rel="noopener">https://github.com/w1u0u1/minidump</a></p>
+<p><a href="https://www.unknowncheats.me/forum/anti-cheat-bypass/419457-mhyprot2-read-process-kernel-memory-valid-signature-driver.html" target="_blank" rel="noopener">https://www.unknowncheats.me/forum/anti-cheat-bypass/419457-mhyprot2-read-process-kernel-memory-valid-signature-driver.html</a></p>
+<p><a href="https://rayanfam.com/topics/reversing-windows-internals-part1/" target="_blank" rel="noopener">https://rayanfam.com/topics/reversing-windows-internals-part1/</a></p>
+<p><img src="https://i.loli.net/2021/02/19/CTuWAM5zdnbXO9J.png" alt="1613669921178.png"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Windows/" rel="tag"># Windows</a>
+          
+            <a href="/tags/二进制/" rel="tag"># 二进制</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/12/19/关于cs3-14所谓的后门分析溯源结果/" rel="next" title="关于cs3.14所谓的后门分析溯源结果">
+                <i class="fa fa-chevron-left"></i> 关于cs3.14所谓的后门分析溯源结果
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/15/某感染病毒分析查杀/" rel="prev" title="某感染病毒分析查杀">
+                某感染病毒分析查杀 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="WBGlIl">
+            
+              <p class="site-author-name" itemprop="name">WBGlIl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                大佬们的博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.sariel.top/" title="只因不值得" target="_blank">只因不值得</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://422926799.github.io/" title="九世" target="_blank">九世</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ggsec.cn/" title="Demon" target="_blank">Demon</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.secist.com/" title="即刻安全" target="_blank">即刻安全</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nek0y4nsu.github.io/" title="Yansu" target="_blank">Yansu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blue-bird1.github.io/" title="青鸟" target="_blank">青鸟</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qwq.moe/" title="蚊子の博客" target="_blank">蚊子の博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://9bie.org/" title="biebie" target="_blank">biebie</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WBGlIl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+
+

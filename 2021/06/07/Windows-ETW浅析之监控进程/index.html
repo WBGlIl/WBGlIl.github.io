@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ETW,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="没有找到合适的图片">
+<meta name="keywords" content="ETW">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows ETW之监控进程">
+<meta property="og:url" content="http://yoursite.com/2021/06/07/Windows-ETW浅析之监控进程/index.html">
+<meta property="og:site_name" content="WBGlIl">
+<meta property="og:description" content="没有找到合适的图片">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2021/06/10/p4CJPHUMv8blZV1.png">
+<meta property="og:updated_time" content="2021-06-19T16:02:54.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Windows ETW之监控进程">
+<meta name="twitter:description" content="没有找到合适的图片">
+<meta name="twitter:image" content="https://i.loli.net/2021/06/10/p4CJPHUMv8blZV1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/06/07/Windows-ETW浅析之监控进程/">
+
+
+
+
+
+  <title>Windows ETW之监控进程 | WBGlIl</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WBGlIl</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/07/Windows-ETW浅析之监控进程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WBGlIl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WBGlIl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Windows ETW之监控进程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-07T21:56:14+08:00">
+                2021-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ETW/" itemprop="url" rel="index">
+                    <span itemprop="name">ETW</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>没有找到合适的图片</p>
+<a id="more"></a>
+
+<p>最近一段时间因为一些事稍微去研究了一下Windows ETW。现在在博客里记录一下</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>使用EtwExplorer可以查看系统中的事件提供者</p>
+<p><img src="https://i.loli.net/2021/06/10/p4CJPHUMv8blZV1.png" alt="image.png"></p>
+<p>我这里选择使用的是Microsoft-Windows-Kernel-Process它可以监控进程相关的事件</p>
+<p>代码示例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br><span class="line">565</span><br><span class="line">566</span><br><span class="line">567</span><br><span class="line">568</span><br><span class="line">569</span><br><span class="line">570</span><br><span class="line">571</span><br><span class="line">572</span><br><span class="line">573</span><br><span class="line">574</span><br><span class="line">575</span><br><span class="line">576</span><br><span class="line">577</span><br><span class="line">578</span><br><span class="line">579</span><br><span class="line">580</span><br><span class="line">581</span><br><span class="line">582</span><br><span class="line">583</span><br><span class="line">584</span><br><span class="line">585</span><br><span class="line">586</span><br><span class="line">587</span><br><span class="line">588</span><br><span class="line">589</span><br><span class="line">590</span><br><span class="line">591</span><br><span class="line">592</span><br><span class="line">593</span><br><span class="line">594</span><br><span class="line">595</span><br><span class="line">596</span><br><span class="line">597</span><br><span class="line">598</span><br><span class="line">599</span><br><span class="line">600</span><br><span class="line">601</span><br><span class="line">602</span><br><span class="line">603</span><br><span class="line">604</span><br><span class="line">605</span><br><span class="line">606</span><br><span class="line">607</span><br><span class="line">608</span><br><span class="line">609</span><br><span class="line">610</span><br><span class="line">611</span><br><span class="line">612</span><br><span class="line">613</span><br><span class="line">614</span><br><span class="line">615</span><br><span class="line">616</span><br><span class="line">617</span><br><span class="line">618</span><br><span class="line">619</span><br><span class="line">620</span><br><span class="line">621</span><br><span class="line">622</span><br><span class="line">623</span><br><span class="line">624</span><br><span class="line">625</span><br><span class="line">626</span><br><span class="line">627</span><br><span class="line">628</span><br><span class="line">629</span><br><span class="line">630</span><br><span class="line">631</span><br><span class="line">632</span><br><span class="line">633</span><br><span class="line">634</span><br><span class="line">635</span><br><span class="line">636</span><br><span class="line">637</span><br><span class="line">638</span><br><span class="line">639</span><br><span class="line">640</span><br><span class="line">641</span><br><span class="line">642</span><br><span class="line">643</span><br><span class="line">644</span><br><span class="line">645</span><br><span class="line">646</span><br><span class="line">647</span><br><span class="line">648</span><br><span class="line">649</span><br><span class="line">650</span><br><span class="line">651</span><br><span class="line">652</span><br><span class="line">653</span><br><span class="line">654</span><br><span class="line">655</span><br><span class="line">656</span><br><span class="line">657</span><br><span class="line">658</span><br><span class="line">659</span><br><span class="line">660</span><br><span class="line">661</span><br><span class="line">662</span><br><span class="line">663</span><br><span class="line">664</span><br><span class="line">665</span><br><span class="line">666</span><br><span class="line">667</span><br><span class="line">668</span><br><span class="line">669</span><br><span class="line">670</span><br><span class="line">671</span><br><span class="line">672</span><br><span class="line">673</span><br><span class="line">674</span><br><span class="line">675</span><br><span class="line">676</span><br><span class="line">677</span><br><span class="line">678</span><br><span class="line">679</span><br><span class="line">680</span><br><span class="line">681</span><br><span class="line">682</span><br><span class="line">683</span><br><span class="line">684</span><br><span class="line">685</span><br><span class="line">686</span><br><span class="line">687</span><br><span class="line">688</span><br><span class="line">689</span><br><span class="line">690</span><br><span class="line">691</span><br><span class="line">692</span><br><span class="line">693</span><br><span class="line">694</span><br><span class="line">695</span><br><span class="line">696</span><br><span class="line">697</span><br><span class="line">698</span><br><span class="line">699</span><br><span class="line">700</span><br><span class="line">701</span><br><span class="line">702</span><br><span class="line">703</span><br><span class="line">704</span><br><span class="line">705</span><br><span class="line">706</span><br><span class="line">707</span><br><span class="line">708</span><br><span class="line">709</span><br><span class="line">710</span><br><span class="line">711</span><br><span class="line">712</span><br><span class="line">713</span><br><span class="line">714</span><br><span class="line">715</span><br><span class="line">716</span><br><span class="line">717</span><br><span class="line">718</span><br><span class="line">719</span><br><span class="line">720</span><br><span class="line">721</span><br><span class="line">722</span><br><span class="line">723</span><br><span class="line">724</span><br><span class="line">725</span><br><span class="line">726</span><br><span class="line">727</span><br><span class="line">728</span><br><span class="line">729</span><br><span class="line">730</span><br><span class="line">731</span><br><span class="line">732</span><br><span class="line">733</span><br><span class="line">734</span><br><span class="line">735</span><br><span class="line">736</span><br><span class="line">737</span><br><span class="line">738</span><br><span class="line">739</span><br><span class="line">740</span><br><span class="line">741</span><br><span class="line">742</span><br><span class="line">743</span><br><span class="line">744</span><br><span class="line">745</span><br><span class="line">746</span><br><span class="line">747</span><br><span class="line">748</span><br><span class="line">749</span><br><span class="line">750</span><br><span class="line">751</span><br><span class="line">752</span><br><span class="line">753</span><br><span class="line">754</span><br><span class="line">755</span><br><span class="line">756</span><br><span class="line">757</span><br><span class="line">758</span><br><span class="line">759</span><br><span class="line">760</span><br><span class="line">761</span><br><span class="line">762</span><br><span class="line">763</span><br><span class="line">764</span><br><span class="line">765</span><br><span class="line">766</span><br><span class="line">767</span><br><span class="line">768</span><br><span class="line">769</span><br><span class="line">770</span><br><span class="line">771</span><br><span class="line">772</span><br><span class="line">773</span><br><span class="line">774</span><br><span class="line">775</span><br><span class="line">776</span><br><span class="line">777</span><br><span class="line">778</span><br><span class="line">779</span><br><span class="line">780</span><br><span class="line">781</span><br><span class="line">782</span><br><span class="line">783</span><br><span class="line">784</span><br><span class="line">785</span><br><span class="line">786</span><br><span class="line">787</span><br><span class="line">788</span><br><span class="line">789</span><br><span class="line">790</span><br><span class="line">791</span><br><span class="line">792</span><br><span class="line">793</span><br><span class="line">794</span><br><span class="line">795</span><br><span class="line">796</span><br><span class="line">797</span><br><span class="line">798</span><br><span class="line">799</span><br><span class="line">800</span><br><span class="line">801</span><br><span class="line">802</span><br><span class="line">803</span><br><span class="line">804</span><br><span class="line">805</span><br><span class="line">806</span><br><span class="line">807</span><br><span class="line">808</span><br><span class="line">809</span><br><span class="line">810</span><br><span class="line">811</span><br><span class="line">812</span><br><span class="line">813</span><br><span class="line">814</span><br><span class="line">815</span><br><span class="line">816</span><br><span class="line">817</span><br><span class="line">818</span><br><span class="line">819</span><br><span class="line">820</span><br><span class="line">821</span><br><span class="line">822</span><br><span class="line">823</span><br><span class="line">824</span><br><span class="line">825</span><br><span class="line">826</span><br><span class="line">827</span><br><span class="line">828</span><br><span class="line">829</span><br><span class="line">830</span><br><span class="line">831</span><br><span class="line">832</span><br><span class="line">833</span><br><span class="line">834</span><br><span class="line">835</span><br><span class="line">836</span><br><span class="line">837</span><br><span class="line">838</span><br><span class="line">839</span><br><span class="line">840</span><br><span class="line">841</span><br><span class="line">842</span><br><span class="line">843</span><br><span class="line">844</span><br><span class="line">845</span><br><span class="line">846</span><br><span class="line">847</span><br><span class="line">848</span><br><span class="line">849</span><br><span class="line">850</span><br><span class="line">851</span><br><span class="line">852</span><br><span class="line">853</span><br><span class="line">854</span><br><span class="line">855</span><br><span class="line">856</span><br><span class="line">857</span><br><span class="line">858</span><br><span class="line">859</span><br><span class="line">860</span><br><span class="line">861</span><br><span class="line">862</span><br><span class="line">863</span><br><span class="line">864</span><br><span class="line">865</span><br><span class="line">866</span><br><span class="line">867</span><br><span class="line">868</span><br><span class="line">869</span><br><span class="line">870</span><br><span class="line">871</span><br><span class="line">872</span><br><span class="line">873</span><br><span class="line">874</span><br><span class="line">875</span><br><span class="line">876</span><br><span class="line">877</span><br><span class="line">878</span><br><span class="line">879</span><br><span class="line">880</span><br><span class="line">881</span><br><span class="line">882</span><br><span class="line">883</span><br><span class="line">884</span><br><span class="line">885</span><br><span class="line">886</span><br><span class="line">887</span><br><span class="line">888</span><br><span class="line">889</span><br><span class="line">890</span><br><span class="line">891</span><br><span class="line">892</span><br><span class="line">893</span><br><span class="line">894</span><br><span class="line">895</span><br><span class="line">896</span><br><span class="line">897</span><br><span class="line">898</span><br><span class="line">899</span><br><span class="line">900</span><br><span class="line">901</span><br><span class="line">902</span><br><span class="line">903</span><br><span class="line">904</span><br><span class="line">905</span><br><span class="line">906</span><br><span class="line">907</span><br><span class="line">908</span><br><span class="line">909</span><br><span class="line">910</span><br><span class="line">911</span><br><span class="line">912</span><br><span class="line">913</span><br><span class="line">914</span><br><span class="line">915</span><br><span class="line">916</span><br><span class="line">917</span><br><span class="line">918</span><br><span class="line">919</span><br><span class="line">920</span><br><span class="line">921</span><br><span class="line">922</span><br><span class="line">923</span><br><span class="line">924</span><br><span class="line">925</span><br><span class="line">926</span><br><span class="line">927</span><br><span class="line">928</span><br><span class="line">929</span><br><span class="line">930</span><br><span class="line">931</span><br><span class="line">932</span><br><span class="line">933</span><br><span class="line">934</span><br><span class="line">935</span><br><span class="line">936</span><br><span class="line">937</span><br><span class="line">938</span><br><span class="line">939</span><br><span class="line">940</span><br><span class="line">941</span><br><span class="line">942</span><br><span class="line">943</span><br><span class="line">944</span><br><span class="line">945</span><br><span class="line">946</span><br><span class="line">947</span><br><span class="line">948</span><br><span class="line">949</span><br><span class="line">950</span><br><span class="line">951</span><br><span class="line">952</span><br><span class="line">953</span><br><span class="line">954</span><br><span class="line">955</span><br><span class="line">956</span><br><span class="line">957</span><br><span class="line">958</span><br><span class="line">959</span><br><span class="line">960</span><br><span class="line">961</span><br><span class="line">962</span><br><span class="line">963</span><br><span class="line">964</span><br><span class="line">965</span><br><span class="line">966</span><br><span class="line">967</span><br><span class="line">968</span><br><span class="line">969</span><br><span class="line">970</span><br><span class="line">971</span><br><span class="line">972</span><br><span class="line">973</span><br><span class="line">974</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;conio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;strsafe.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;wbemidl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;wmistr.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;evntrace.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Evntcons.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;tdh.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;in6addr.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> comment(lib, <span class="meta-string">"tdh.lib"</span>)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> comment(lib, <span class="meta-string">"ws2_32.lib"</span>)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> comment(lib, <span class="meta-string">"Advapi32.lib"</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> filename(x) strrchr(x,<span class="meta-string">'\\'</span>)?strrchr(x,<span class="meta-string">'\\'</span>)+1:x</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GetLastErrorEx(lpszFunction)&#123;LPVOID lpMsgBuf;DWORD dw = GetLastError();FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |FORMAT_MESSAGE_FROM_SYSTEM |FORMAT_MESSAGE_IGNORE_INSERTS,NULL,dw,MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),(LPSTR)&amp;lpMsgBuf,0, NULL);\</span></span><br><span class="line"><span class="keyword">if</span> (lpszFunction)\</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%s(Line:%d)-&gt;Funtion:%s\ndiyInfo:%s\nError(%d)-&gt;Info:%s\n"</span>,\</span><br><span class="line">filename(__FILE__), __LINE__, __FUNCTION__, lpszFunction, dw, lpMsgBuf);\</span><br><span class="line"><span class="keyword">else</span> \</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%s(Line:%d)-&gt;Funtion:%s\nError(%d)-&gt;Info:%s\n"</span>,\</span><br><span class="line">filename(__FILE__), __LINE__, __FUNCTION__, dw, lpMsgBuf);\</span><br><span class="line">LocalFree(lpMsgBuf);\</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LOGSESSION_NAME <span class="meta-string">L"Testing ETW Consumer"</span></span></span><br><span class="line"></span><br><span class="line">TRACEHANDLE sessionHandle;</span><br><span class="line">TRACEHANDLE traceHandle;</span><br><span class="line"></span><br><span class="line">DWORD PointerSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> bufferSize = <span class="keyword">sizeof</span>(EVENT_TRACE_PROPERTIES) + <span class="keyword">sizeof</span>(LOGSESSION_NAME) + <span class="keyword">sizeof</span>(WCHAR);</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> pSessionProperties = <span class="keyword">static_cast</span>&lt;PEVENT_TRACE_PROPERTIES&gt;(<span class="built_in">malloc</span>(bufferSize));</span><br><span class="line"></span><br><span class="line"><span class="comment">//"&#123;b2bcc945-9eb9-4231-883c-d6455cf4d86b&#125;"</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> GUID SessionGuid =</span><br><span class="line">&#123; <span class="number">0xb2bcc945</span>, <span class="number">0x9eb9</span>, <span class="number">0x4231</span>,&#123; <span class="number">0x88</span>, <span class="number">0x3c</span>, <span class="number">0xd6</span>, <span class="number">0x45</span>, <span class="number">0x5c</span>, <span class="number">0xf4</span>, <span class="number">0xd8</span>, <span class="number">0x6b</span> &#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Microsoft-Windows-Kernel-Process &#123;22FB2CD6-0E7B-422B-A0C7-2FAD1FD0E716&#125;</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> GUID PROCESS_PROVIDER_GUID =</span><br><span class="line">&#123; <span class="number">0x22fb2cd6</span>, <span class="number">0x0e7b</span>, <span class="number">0x422b</span>,&#123; <span class="number">0xa0</span>, <span class="number">0xc7</span>, <span class="number">0x2f</span>, <span class="number">0xad</span>, <span class="number">0x1f</span>, <span class="number">0xd0</span>, <span class="number">0xe7</span>, <span class="number">0x16</span> &#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintMapString</span><span class="params">(PEVENT_MAP_INFO pMapInfo, PBYTE pData)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	BOOL MatchFound = FALSE;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ((pMapInfo-&gt;Flag &amp; EVENTMAP_INFO_FLAG_MANIFEST_VALUEMAP) == EVENTMAP_INFO_FLAG_MANIFEST_VALUEMAP ||</span><br><span class="line">		((pMapInfo-&gt;Flag &amp; EVENTMAP_INFO_FLAG_WBEM_VALUEMAP) == EVENTMAP_INFO_FLAG_WBEM_VALUEMAP &amp;&amp;</span><br><span class="line">			(pMapInfo-&gt;Flag &amp; (~EVENTMAP_INFO_FLAG_WBEM_VALUEMAP)) != EVENTMAP_INFO_FLAG_WBEM_FLAG))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> ((pMapInfo-&gt;Flag &amp; EVENTMAP_INFO_FLAG_WBEM_NO_MAP) == EVENTMAP_INFO_FLAG_WBEM_NO_MAP)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%s\n"</span>, (LPWSTR)((PBYTE)pMapInfo + pMapInfo-&gt;MapEntryArray[*(PULONG)pData].OutputOffset));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">for</span> (DWORD i = <span class="number">0</span>; i &lt; pMapInfo-&gt;EntryCount; i++)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span> (pMapInfo-&gt;MapEntryArray[i].Value == *(PULONG)pData)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"%s\n"</span>, (LPWSTR)((PBYTE)pMapInfo + pMapInfo-&gt;MapEntryArray[i].OutputOffset));</span><br><span class="line">					MatchFound = TRUE;</span><br><span class="line">					<span class="keyword">break</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (FALSE == MatchFound)</span><br><span class="line">			&#123;</span><br><span class="line">				wprintf(<span class="string">L"%lu\n"</span>, *(PULONG)pData);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> ((pMapInfo-&gt;Flag &amp; EVENTMAP_INFO_FLAG_MANIFEST_BITMAP) == EVENTMAP_INFO_FLAG_MANIFEST_BITMAP ||</span><br><span class="line">		(pMapInfo-&gt;Flag &amp; EVENTMAP_INFO_FLAG_WBEM_BITMAP) == EVENTMAP_INFO_FLAG_WBEM_BITMAP ||</span><br><span class="line">		((pMapInfo-&gt;Flag &amp; EVENTMAP_INFO_FLAG_WBEM_VALUEMAP) == EVENTMAP_INFO_FLAG_WBEM_VALUEMAP &amp;&amp;</span><br><span class="line">			(pMapInfo-&gt;Flag &amp; (~EVENTMAP_INFO_FLAG_WBEM_VALUEMAP)) == EVENTMAP_INFO_FLAG_WBEM_FLAG))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> ((pMapInfo-&gt;Flag &amp; EVENTMAP_INFO_FLAG_WBEM_NO_MAP) == EVENTMAP_INFO_FLAG_WBEM_NO_MAP)</span><br><span class="line">		&#123;</span><br><span class="line">			DWORD BitPosition = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">for</span> (DWORD i = <span class="number">0</span>; i &lt; pMapInfo-&gt;EntryCount; i++)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span> ((*(PULONG)pData &amp; (BitPosition = (<span class="number">1</span> &lt;&lt; i))) == BitPosition)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"%s%s"</span>,</span><br><span class="line">						(MatchFound) ? <span class="string">L" | "</span> : <span class="string">L""</span>,</span><br><span class="line">						(LPWSTR)((PBYTE)pMapInfo + pMapInfo-&gt;MapEntryArray[i].OutputOffset));</span><br><span class="line"></span><br><span class="line">					MatchFound = TRUE;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">for</span> (DWORD i = <span class="number">0</span>; i &lt; pMapInfo-&gt;EntryCount; i++)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span> ((pMapInfo-&gt;MapEntryArray[i].Value &amp; *(PULONG)pData) == pMapInfo-&gt;MapEntryArray[i].Value)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"%s%s"</span>,</span><br><span class="line">						(MatchFound) ? <span class="string">L" | "</span> : <span class="string">L""</span>,</span><br><span class="line">						(LPWSTR)((PBYTE)pMapInfo + pMapInfo-&gt;MapEntryArray[i].OutputOffset));</span><br><span class="line"></span><br><span class="line">					MatchFound = TRUE;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (MatchFound)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"\n"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%lu\n"</span>, *(PULONG)pData);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_NAME 256</span></span><br><span class="line"><span class="function">DWORD <span class="title">FormatAndPrintData</span><span class="params">(PEVENT_RECORD pEvent, USHORT InType, USHORT OutType, PBYTE pData, DWORD DataSize, PEVENT_MAP_INFO pMapInfo)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	UNREFERENCED_PARAMETER(pEvent);</span><br><span class="line"></span><br><span class="line">	DWORD status = ERROR_SUCCESS;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">switch</span> (InType)</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_UNICODESTRING:</span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_COUNTEDSTRING:</span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_REVERSEDCOUNTEDSTRING:</span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_NONNULLTERMINATEDSTRING:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">size_t</span> StringLength = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (TDH_INTYPE_COUNTEDSTRING == InType)</span><br><span class="line">		&#123;</span><br><span class="line">			StringLength = *(PUSHORT)pData;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (TDH_INTYPE_REVERSEDCOUNTEDSTRING == InType)</span><br><span class="line">		&#123;</span><br><span class="line">			StringLength = MAKEWORD(HIBYTE((PUSHORT)pData), LOBYTE((PUSHORT)pData));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (TDH_INTYPE_NONNULLTERMINATEDSTRING == InType)</span><br><span class="line">		&#123;</span><br><span class="line">			StringLength = DataSize;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			StringLength = wcslen((LPWSTR)pData);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		wprintf(<span class="string">L"%.*s\n"</span>, StringLength, (LPWSTR)pData);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_ANSISTRING:</span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_COUNTEDANSISTRING:</span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_REVERSEDCOUNTEDANSISTRING:</span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_NONNULLTERMINATEDANSISTRING:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">size_t</span> StringLength = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (TDH_INTYPE_COUNTEDANSISTRING == InType)</span><br><span class="line">		&#123;</span><br><span class="line">			StringLength = *(PUSHORT)pData;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (TDH_INTYPE_REVERSEDCOUNTEDANSISTRING == InType)</span><br><span class="line">		&#123;</span><br><span class="line">			StringLength = MAKEWORD(HIBYTE((PUSHORT)pData), LOBYTE((PUSHORT)pData));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (TDH_INTYPE_NONNULLTERMINATEDANSISTRING == InType)</span><br><span class="line">		&#123;</span><br><span class="line">			StringLength = DataSize;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			StringLength = <span class="built_in">strlen</span>((LPSTR)pData);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		wprintf(<span class="string">L"%.*S\n"</span>, StringLength, (LPSTR)pData);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_INT8:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%hd\n"</span>, *(PCHAR)pData);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_UINT8:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (TDH_OUTTYPE_HEXINT8 == OutType)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"0x%x\n"</span>, *(PBYTE)pData);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%hu\n"</span>, *(PBYTE)pData);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_INT16:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%hd\n"</span>, *(PSHORT)pData);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_UINT16:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (TDH_OUTTYPE_HEXINT16 == OutType)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"0x%x\n"</span>, *(PUSHORT)pData);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (TDH_OUTTYPE_PORT == OutType)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%hu\n"</span>, ntohs(*(PUSHORT)pData));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%hu\n"</span>, *(PUSHORT)pData);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_INT32:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (TDH_OUTTYPE_HRESULT == OutType)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"0x%x\n"</span>, *(PLONG)pData);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%d\n"</span>, *(PLONG)pData);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_UINT32:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (TDH_OUTTYPE_HRESULT == OutType ||</span><br><span class="line">			TDH_OUTTYPE_WIN32ERROR == OutType ||</span><br><span class="line">			TDH_OUTTYPE_NTSTATUS == OutType ||</span><br><span class="line">			TDH_OUTTYPE_HEXINT32 == OutType)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"0x%x\n"</span>, *(PULONG)pData);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (TDH_OUTTYPE_IPV4 == OutType)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%d.%d.%d.%d\n"</span>, (*(PLONG)pData &gt;&gt; <span class="number">0</span>) &amp; <span class="number">0xff</span>,</span><br><span class="line">				(*(PLONG)pData &gt;&gt; <span class="number">8</span>) &amp; <span class="number">0xff</span>,</span><br><span class="line">				(*(PLONG)pData &gt;&gt; <span class="number">16</span>) &amp; <span class="number">0xff</span>,</span><br><span class="line">				(*(PLONG)pData &gt;&gt; <span class="number">24</span>) &amp; <span class="number">0xff</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (pMapInfo)</span><br><span class="line">			&#123;</span><br><span class="line">				PrintMapString(pMapInfo, pData);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				wprintf(<span class="string">L"%lu\n"</span>, *(PULONG)pData);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_INT64:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%I64d\n"</span>, *(PLONGLONG)pData);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_UINT64:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (TDH_OUTTYPE_HEXINT64 == OutType)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"0x%x\n"</span>, *(PULONGLONG)pData);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%I64u\n"</span>, *(PULONGLONG)pData);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_FLOAT:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%f\n"</span>, *(PFLOAT)pData);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_DOUBLE:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%I64f\n"</span>, *(DOUBLE*)pData);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_BOOLEAN:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%s\n"</span>, (<span class="number">0</span> == (PBOOL)pData) ? <span class="string">L"false"</span> : <span class="string">L"true"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_BINARY:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (TDH_OUTTYPE_IPV6 == OutType)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">//WCHAR IPv6AddressAsString[46];</span></span><br><span class="line">			<span class="comment">//PIPV6ADDRTOSTRING fnRtlIpv6AddressToString;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">//fnRtlIpv6AddressToString = (PIPV6ADDRTOSTRING)GetProcAddress(</span></span><br><span class="line">			<span class="comment">//	GetModuleHandle(L"ntdll"), "RtlIpv6AddressToStringW");</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">//if (NULL == fnRtlIpv6AddressToString)</span></span><br><span class="line">			<span class="comment">//&#123;</span></span><br><span class="line">			<span class="comment">//	wprintf(L"GetProcAddress failed with %lu.\n", status = GetLastError());</span></span><br><span class="line">			<span class="comment">//	goto cleanup;</span></span><br><span class="line">			<span class="comment">//&#125;</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">//fnRtlIpv6AddressToString((IN6_ADDR*)pData, IPv6AddressAsString);</span></span><br><span class="line"></span><br><span class="line">			<span class="comment">//wprintf(L"%s\n", IPv6AddressAsString);</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">for</span> (DWORD i = <span class="number">0</span>; i &lt; DataSize; i++)</span><br><span class="line">			&#123;</span><br><span class="line">				wprintf(<span class="string">L"%.2x"</span>, pData[i]);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			wprintf(<span class="string">L"\n"</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_GUID:</span><br><span class="line">	&#123;</span><br><span class="line">		WCHAR szGuid[<span class="number">50</span>];</span><br><span class="line"></span><br><span class="line">		StringFromGUID2(*(GUID*)pData, szGuid, <span class="keyword">sizeof</span>(szGuid) - <span class="number">1</span>);</span><br><span class="line">		wprintf(<span class="string">L"%s\n"</span>, szGuid);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_POINTER:</span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_SIZET:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="number">4</span> == PointerSize)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"0x%x\n"</span>, *(PULONG)pData);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"0x%x\n"</span>, *(PULONGLONG)pData);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_FILETIME:</span><br><span class="line">	&#123;</span><br><span class="line">		ULONGLONG TimeStamp = <span class="number">0</span>;</span><br><span class="line">		SYSTEMTIME st;</span><br><span class="line">		SYSTEMTIME stLocal;</span><br><span class="line">		FILETIME ft;</span><br><span class="line">		ft.dwHighDateTime = pEvent-&gt;EventHeader.TimeStamp.HighPart;</span><br><span class="line">		ft.dwLowDateTime = pEvent-&gt;EventHeader.TimeStamp.LowPart;</span><br><span class="line"></span><br><span class="line">		FileTimeToSystemTime(&amp;ft, &amp;st);</span><br><span class="line">		SystemTimeToTzSpecificLocalTime(<span class="literal">NULL</span>, &amp;st, &amp;stLocal);</span><br><span class="line"></span><br><span class="line">		TimeStamp = pEvent-&gt;EventHeader.TimeStamp.QuadPart;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//Local System Time(YYYY-MM-DD HH:MM:SS): </span></span><br><span class="line">		wprintf(<span class="string">L"%d-%d-%d %d:%d:%d\n"</span>, stLocal.wYear, stLocal.wMonth,stLocal.wDay, stLocal.wHour, stLocal.wMinute, stLocal.wSecond);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_SYSTEMTIME:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_SID:</span><br><span class="line">	&#123;</span><br><span class="line">		WCHAR UserName[MAX_NAME];</span><br><span class="line">		WCHAR DomainName[MAX_NAME];</span><br><span class="line">		DWORD cchUserSize = MAX_NAME;</span><br><span class="line">		DWORD cchDomainSize = MAX_NAME;</span><br><span class="line">		SID_NAME_USE eNameUse;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (!LookupAccountSid(<span class="literal">NULL</span>, (PSID)pData, UserName, &amp;cchUserSize, DomainName, &amp;cchDomainSize, &amp;eNameUse))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (ERROR_NONE_MAPPED == status)</span><br><span class="line">			&#123;</span><br><span class="line">				wprintf(<span class="string">L"Unable to locate account for the specified SID\n"</span>);</span><br><span class="line">				status = ERROR_SUCCESS;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				wprintf(<span class="string">L"LookupAccountSid failed with %lu\n"</span>, status = GetLastError());</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">goto</span> cleanup;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"%s\\%s\n"</span>, DomainName, UserName);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_HEXINT32:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"0x%x\n"</span>, (PULONG)pData);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_HEXINT64:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"0x%x\n"</span>, (PULONGLONG)pData);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_UNICODECHAR:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%c\n"</span>, *(PWCHAR)pData);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_ANSICHAR:</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%C\n"</span>, *(PCHAR)pData);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> TDH_INTYPE_WBEMSID:</span><br><span class="line">	&#123;</span><br><span class="line">		WCHAR UserName[MAX_NAME];</span><br><span class="line">		WCHAR DomainName[MAX_NAME];</span><br><span class="line">		DWORD cchUserSize = MAX_NAME;</span><br><span class="line">		DWORD cchDomainSize = MAX_NAME;</span><br><span class="line">		SID_NAME_USE eNameUse;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ((PULONG)pData &gt; <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">// A WBEM SID is actually a TOKEN_USER structure followed by the SID. The size of the</span></span><br><span class="line">			<span class="comment">// TOKEN_USER structure differs depending on whether the events were generated on a</span></span><br><span class="line">			<span class="comment">// 32-bit or 64-bit architecture. Also the structure is aligned on an 8-byte boundary,</span></span><br><span class="line">			<span class="comment">// so its size is 8 bytes on a 32-bit computer and 16 bytes on a 64-bit computer.</span></span><br><span class="line">			<span class="comment">// Doubling the pointer size handles both cases.</span></span><br><span class="line"></span><br><span class="line">			pData += PointerSize * <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (!LookupAccountSid(<span class="literal">NULL</span>, (PSID)pData, UserName, &amp;cchUserSize, DomainName, &amp;cchDomainSize, &amp;eNameUse))</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">if</span> (ERROR_NONE_MAPPED == status)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"Unable to locate account for the specified SID\n"</span>);</span><br><span class="line">					status = ERROR_SUCCESS;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span></span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"LookupAccountSid failed with %lu\n"</span>, status = GetLastError());</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				<span class="keyword">goto</span> cleanup;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				wprintf(<span class="string">L"%s\\%s\n"</span>, DomainName, UserName);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		status = ERROR_NOT_FOUND;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">cleanup:</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DWORD <span class="title">GetArraySize</span><span class="params">(PEVENT_RECORD pEvent, PTRACE_EVENT_INFO pInfo, USHORT i, PUSHORT ArraySize)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DWORD status = ERROR_SUCCESS;</span><br><span class="line">	PROPERTY_DATA_DESCRIPTOR DataDescriptor;</span><br><span class="line">	DWORD PropertySize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ((pInfo-&gt;EventPropertyInfoArray[i].Flags &amp; PropertyParamCount) == PropertyParamCount)</span><br><span class="line">	&#123;</span><br><span class="line">		DWORD Count = <span class="number">0</span>;  <span class="comment">// Expects the count to be defined by a UINT16 or UINT32</span></span><br><span class="line">		DWORD j = pInfo-&gt;EventPropertyInfoArray[i].countPropertyIndex;</span><br><span class="line">		ZeroMemory(&amp;DataDescriptor, <span class="keyword">sizeof</span>(PROPERTY_DATA_DESCRIPTOR));</span><br><span class="line">		DataDescriptor.PropertyName = (ULONGLONG)((PBYTE)(pInfo)+pInfo-&gt;EventPropertyInfoArray[j].NameOffset);</span><br><span class="line">		DataDescriptor.ArrayIndex = ULONG_MAX;</span><br><span class="line">		status = TdhGetPropertySize(pEvent, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="number">1</span>, &amp;DataDescriptor, &amp;PropertySize);</span><br><span class="line">		status = TdhGetProperty(pEvent, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="number">1</span>, &amp;DataDescriptor, PropertySize, (PBYTE)&amp;Count);</span><br><span class="line">		*ArraySize = (USHORT)Count;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		*ArraySize = pInfo-&gt;EventPropertyInfoArray[i].count;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">RemoveTrailingSpace</span><span class="params">(PEVENT_MAP_INFO pMapInfo)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	SIZE_T ByteLength = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (DWORD i = <span class="number">0</span>; i &lt; pMapInfo-&gt;EntryCount; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		ByteLength = (wcslen((LPWSTR)((PBYTE)pMapInfo + pMapInfo-&gt;MapEntryArray[i].OutputOffset)) - <span class="number">1</span>) * <span class="number">2</span>;</span><br><span class="line">		*((LPWSTR)((PBYTE)pMapInfo + (pMapInfo-&gt;MapEntryArray[i].OutputOffset + ByteLength))) = L'\<span class="number">0'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DWORD <span class="title">GetMapInfo</span><span class="params">(PEVENT_RECORD pEvent, LPWSTR pMapName, DWORD DecodingSource, PEVENT_MAP_INFO&amp; pMapInfo)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DWORD status = ERROR_SUCCESS;</span><br><span class="line">	DWORD MapSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Retrieve the required buffer size for the map info.</span></span><br><span class="line"></span><br><span class="line">	status = TdhGetEventMapInformation(pEvent, pMapName, pMapInfo, &amp;MapSize);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (ERROR_INSUFFICIENT_BUFFER == status)</span><br><span class="line">	&#123;</span><br><span class="line">		pMapInfo = (PEVENT_MAP_INFO)<span class="built_in">malloc</span>(MapSize);</span><br><span class="line">		<span class="keyword">if</span> (pMapInfo == <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"Failed to allocate memory for map info (size=%lu).\n"</span>, MapSize);</span><br><span class="line">			status = ERROR_OUTOFMEMORY;</span><br><span class="line">			<span class="keyword">goto</span> cleanup;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Retrieve the map info.</span></span><br><span class="line"></span><br><span class="line">		status = TdhGetEventMapInformation(pEvent, pMapName, pMapInfo, &amp;MapSize);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (ERROR_SUCCESS == status)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (DecodingSourceXMLFile == DecodingSource)</span><br><span class="line">		&#123;</span><br><span class="line">			RemoveTrailingSpace(pMapInfo);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (ERROR_NOT_FOUND == status)</span><br><span class="line">		&#123;</span><br><span class="line">			status = ERROR_SUCCESS; <span class="comment">// This case is okay.</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"TdhGetEventMapInformation failed with 0x%x.\n"</span>, status);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">cleanup:</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DWORD <span class="title">PrintProperties</span><span class="params">(PEVENT_RECORD pEvent, PTRACE_EVENT_INFO pInfo, USHORT i, LPWSTR pStructureName, USHORT StructIndex)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DWORD status = ERROR_SUCCESS;</span><br><span class="line">	DWORD LastMember = <span class="number">0</span>;  <span class="comment">// Last member of a structure</span></span><br><span class="line">	USHORT ArraySize = <span class="number">0</span>;</span><br><span class="line">	PEVENT_MAP_INFO pMapInfo = <span class="literal">NULL</span>;</span><br><span class="line">	PROPERTY_DATA_DESCRIPTOR DataDescriptors[<span class="number">2</span>];</span><br><span class="line">	ULONG DescriptorsCount = <span class="number">0</span>;</span><br><span class="line">	DWORD PropertySize = <span class="number">0</span>;</span><br><span class="line">	PBYTE pData = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Get the size of the array if the property is an array.</span></span><br><span class="line"></span><br><span class="line">	status = GetArraySize(pEvent, pInfo, i, &amp;ArraySize);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (USHORT k = <span class="number">0</span>; k &lt; ArraySize; k++)</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(<span class="string">L"%*s%s: "</span>, (pStructureName) ? <span class="number">4</span> : <span class="number">0</span>, <span class="string">L""</span>, (LPWSTR)((PBYTE)(pInfo)+pInfo-&gt;EventPropertyInfoArray[i].NameOffset));</span><br><span class="line"></span><br><span class="line">		<span class="comment">// If the property is a structure, print the members of the structure.</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ((pInfo-&gt;EventPropertyInfoArray[i].Flags &amp; PropertyStruct) == PropertyStruct)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"\n"</span>);</span><br><span class="line"></span><br><span class="line">			LastMember = pInfo-&gt;EventPropertyInfoArray[i].structType.StructStartIndex +</span><br><span class="line">				pInfo-&gt;EventPropertyInfoArray[i].structType.NumOfStructMembers;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">for</span> (USHORT j = pInfo-&gt;EventPropertyInfoArray[i].structType.StructStartIndex; j &lt; LastMember; j++)</span><br><span class="line">			&#123;</span><br><span class="line">				status = PrintProperties(pEvent, pInfo, j, (LPWSTR)((PBYTE)(pInfo)+pInfo-&gt;EventPropertyInfoArray[i].NameOffset), k);</span><br><span class="line">				<span class="keyword">if</span> (ERROR_SUCCESS != status)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"Printing the members of the structure failed.\n"</span>);</span><br><span class="line">					<span class="keyword">goto</span> cleanup;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">		&#123;</span><br><span class="line">			ZeroMemory(&amp;DataDescriptors, <span class="keyword">sizeof</span>(DataDescriptors));</span><br><span class="line"></span><br><span class="line">			<span class="comment">// To retrieve a member of a structure, you need to specify an array of descriptors. The</span></span><br><span class="line">			<span class="comment">// first descriptor in the array identifies the name of the structure and the second</span></span><br><span class="line">			<span class="comment">// descriptor defines the member of the structure whose data you want to retrieve.</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (pStructureName)</span><br><span class="line">			&#123;</span><br><span class="line">				DataDescriptors[<span class="number">0</span>].PropertyName = (ULONGLONG)pStructureName;</span><br><span class="line">				DataDescriptors[<span class="number">0</span>].ArrayIndex = StructIndex;</span><br><span class="line">				DataDescriptors[<span class="number">1</span>].PropertyName = (ULONGLONG)((PBYTE)(pInfo)+pInfo-&gt;EventPropertyInfoArray[i].NameOffset);</span><br><span class="line">				DataDescriptors[<span class="number">1</span>].ArrayIndex = k;</span><br><span class="line">				DescriptorsCount = <span class="number">2</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				DataDescriptors[<span class="number">0</span>].PropertyName = (ULONGLONG)((PBYTE)(pInfo)+pInfo-&gt;EventPropertyInfoArray[i].NameOffset);</span><br><span class="line">				DataDescriptors[<span class="number">0</span>].ArrayIndex = k;</span><br><span class="line">				DescriptorsCount = <span class="number">1</span>;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// The TDH API does not support IPv6 addresses. If the output type is TDH_OUTTYPE_IPV6,</span></span><br><span class="line">			<span class="comment">// you will not be able to consume the rest of the event. If you try to consume the</span></span><br><span class="line">			<span class="comment">// remainder of the event, you will get ERROR_EVT_INVALID_EVENT_DATA.</span></span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (TDH_INTYPE_BINARY == pInfo-&gt;EventPropertyInfoArray[i].nonStructType.InType &amp;&amp;</span><br><span class="line">				TDH_OUTTYPE_IPV6 == pInfo-&gt;EventPropertyInfoArray[i].nonStructType.OutType)</span><br><span class="line">			&#123;</span><br><span class="line">				wprintf(<span class="string">L"The event contains an IPv6 address. Skipping event.\n"</span>);</span><br><span class="line">				status = ERROR_EVT_INVALID_EVENT_DATA;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span></span><br><span class="line">			&#123;</span><br><span class="line">				status = TdhGetPropertySize(pEvent, <span class="number">0</span>, <span class="literal">NULL</span>, DescriptorsCount, &amp;DataDescriptors[<span class="number">0</span>], &amp;PropertySize);</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (ERROR_SUCCESS != status)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"TdhGetPropertySize failed with %lu\n"</span>, status);</span><br><span class="line">					<span class="keyword">goto</span> cleanup;</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				pData = (PBYTE)<span class="built_in">malloc</span>(PropertySize);</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (<span class="literal">NULL</span> == pData)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"Failed to allocate memory for property data\n"</span>);</span><br><span class="line">					status = ERROR_OUTOFMEMORY;</span><br><span class="line">					<span class="keyword">goto</span> cleanup;</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				status = TdhGetProperty(pEvent, <span class="number">0</span>, <span class="literal">NULL</span>, DescriptorsCount, &amp;DataDescriptors[<span class="number">0</span>], PropertySize, pData);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// Get the name/value mapping if the property specifies a value map.</span></span><br><span class="line"></span><br><span class="line">				status = GetMapInfo(pEvent,</span><br><span class="line">					(PWCHAR)((PBYTE)(pInfo)+pInfo-&gt;EventPropertyInfoArray[i].nonStructType.MapNameOffset),</span><br><span class="line">					pInfo-&gt;DecodingSource,</span><br><span class="line">					pMapInfo);</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (ERROR_SUCCESS != status)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"GetMapInfo failed\n"</span>);</span><br><span class="line">					<span class="keyword">goto</span> cleanup;</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				status = FormatAndPrintData(pEvent,</span><br><span class="line">					pInfo-&gt;EventPropertyInfoArray[i].nonStructType.InType,</span><br><span class="line">					pInfo-&gt;EventPropertyInfoArray[i].nonStructType.OutType,</span><br><span class="line">					pData,</span><br><span class="line">					PropertySize,</span><br><span class="line">					pMapInfo</span><br><span class="line">				);</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (ERROR_SUCCESS != status)</span><br><span class="line">				&#123;</span><br><span class="line">					wprintf(<span class="string">L"GetMapInfo failed\n"</span>);</span><br><span class="line">					<span class="keyword">goto</span> cleanup;</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (pData)</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="built_in">free</span>(pData);</span><br><span class="line">					pData = <span class="literal">NULL</span>;</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (pMapInfo)</span><br><span class="line">				&#123;</span><br><span class="line">					<span class="built_in">free</span>(pMapInfo);</span><br><span class="line">					pMapInfo = <span class="literal">NULL</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">cleanup:</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (pData)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">free</span>(pData);</span><br><span class="line">		pData = <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (pMapInfo)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">free</span>(pMapInfo);</span><br><span class="line">		pMapInfo = <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Showinfo</span><span class="params">(PTRACE_EVENT_INFO&amp; pInfo)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>((<span class="string">"Id: %u\n"</span>), pInfo-&gt;EventDescriptor.Id);</span><br><span class="line">	<span class="built_in">printf</span>((<span class="string">"Version: %u\n"</span>), pInfo-&gt;EventDescriptor.Version);</span><br><span class="line">	<span class="built_in">printf</span>((<span class="string">"Channel: %u\n"</span>), pInfo-&gt;EventDescriptor.Channel);</span><br><span class="line">	<span class="built_in">printf</span>((<span class="string">"Level: %u\n"</span>), pInfo-&gt;EventDescriptor.Level);</span><br><span class="line">	<span class="built_in">printf</span>((<span class="string">"Opcode: %u\n"</span>), pInfo-&gt;EventDescriptor.Opcode);</span><br><span class="line">	<span class="built_in">printf</span>((<span class="string">"Task: %u\n"</span>), pInfo-&gt;EventDescriptor.Task);</span><br><span class="line">	<span class="built_in">printf</span>((<span class="string">"Keyword: %lu\n"</span>), pInfo-&gt;EventDescriptor.Keyword);</span><br><span class="line"></span><br><span class="line">	wprintf(<span class="string">L"ProviderName: %s\n"</span>, (WCHAR*)pInfo + pInfo-&gt;ProviderNameOffset);</span><br><span class="line">	wprintf(<span class="string">L"ChannelName: %s\n"</span>, (WCHAR*)pInfo + pInfo-&gt;ChannelNameOffset);</span><br><span class="line">	wprintf(<span class="string">L"KeywordsName: %s\n"</span>, (WCHAR*)pInfo + pInfo-&gt;KeywordsNameOffset);</span><br><span class="line">	wprintf(<span class="string">L"TaskName: %s\n"</span>, (WCHAR*)pInfo + pInfo-&gt;TaskNameOffset);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//ShowNameString((LPBYTE)pInfo + pInfo-&gt;ProviderNameOffset, pInfo-&gt;ProviderNameOffset, L"ProviderName");</span></span><br><span class="line">	<span class="comment">//ShowNameString((LPBYTE)pInfo + pInfo-&gt;ChannelNameOffset, pInfo-&gt;ChannelNameOffset, L"ChannelName");</span></span><br><span class="line">	<span class="comment">//ShowNameString((LPBYTE)pInfo + pInfo-&gt;KeywordsNameOffset, pInfo-&gt;KeywordsNameOffset, L"KeywordsName");</span></span><br><span class="line">	<span class="comment">//ShowNameString((LPBYTE)pInfo + pInfo-&gt;TaskNameOffset, pInfo-&gt;TaskNameOffset, L"TaskName");</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">DWORD <span class="title">GetEventInformation</span><span class="params">(PEVENT_RECORD pEvent, PTRACE_EVENT_INFO&amp; pInfo)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DWORD status = ERROR_SUCCESS;</span><br><span class="line">	DWORD BufferSize = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	status = TdhGetEventInformation(pEvent, <span class="number">0</span>, <span class="literal">NULL</span>, pInfo, &amp;BufferSize);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (ERROR_INSUFFICIENT_BUFFER == status)</span><br><span class="line">	&#123;</span><br><span class="line">		pInfo = (TRACE_EVENT_INFO*)<span class="built_in">malloc</span>(BufferSize);</span><br><span class="line">		<span class="keyword">if</span> (pInfo == <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"Failed to allocate memory for event info (size=%lu).\n"</span>, BufferSize);</span><br><span class="line">			status = ERROR_OUTOFMEMORY;</span><br><span class="line">			<span class="keyword">goto</span> cleanup;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Retrieve the event metadata.</span></span><br><span class="line"></span><br><span class="line">		status = TdhGetEventInformation(pEvent, <span class="number">0</span>, <span class="literal">NULL</span>, pInfo, &amp;BufferSize);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (ERROR_SUCCESS != status)</span><br><span class="line">	&#123;</span><br><span class="line">		GetLastErrorEx(<span class="string">"TdhGetEventInformation 错误代码"</span>, status);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">cleanup:</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">VOID WINAPI <span class="title">EventRecordCallback</span><span class="params">(PEVENT_RECORD pEventRecord)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	DWORD status = <span class="number">0</span>;</span><br><span class="line">	PTRACE_EVENT_INFO pInfo = <span class="literal">NULL</span>;</span><br><span class="line">	LPWSTR pwsEventGuid = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"ETW ********************************************************** start\n"</span>);</span><br><span class="line">	<span class="keyword">if</span> (!IsEqualGUID(pEventRecord-&gt;EventHeader.ProviderId, PROCESS_PROVIDER_GUID))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		status = GetEventInformation(pEventRecord, pInfo);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (ERROR_SUCCESS != status)</span><br><span class="line">		&#123;</span><br><span class="line">			GetLastErrorEx(<span class="string">"GetEventInformation 错误代码"</span>, status);</span><br><span class="line">			<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Determine whether the event is defined by a MOF class, in an instrumentation manifest, or</span></span><br><span class="line">		<span class="comment">// a WPP template; to use TDH to decode the event, it must be defined by one of these three sources.</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (DecodingSourceWbem == pInfo-&gt;DecodingSource)  <span class="comment">// MOF class</span></span><br><span class="line">		&#123;</span><br><span class="line">			HRESULT hr = StringFromCLSID(pInfo-&gt;EventGuid, &amp;pwsEventGuid);</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (FAILED(hr))</span><br><span class="line">			&#123;</span><br><span class="line">				GetLastErrorEx(<span class="string">"StringFromCLSID 错误代码"</span>, hr);</span><br><span class="line">				status = hr;</span><br><span class="line">				<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			wprintf(<span class="string">L"\nEvent GUID: %s\n"</span>, pwsEventGuid);</span><br><span class="line">			CoTaskMemFree(pwsEventGuid);</span><br><span class="line">			pwsEventGuid = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">			wprintf(<span class="string">L"Event version: %d\n"</span>, pEventRecord-&gt;EventHeader.EventDescriptor.Version);</span><br><span class="line">			wprintf(<span class="string">L"Event type: %d\n"</span>, pEventRecord-&gt;EventHeader.EventDescriptor.Opcode);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (DecodingSourceXMLFile == pInfo-&gt;DecodingSource) <span class="comment">// Instrumentation manifest</span></span><br><span class="line">		&#123;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="comment">// Not handling the WPP case</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="comment">//打印etw info</span></span><br><span class="line">	Showinfo(pInfo);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// If the event contains event-specific data use TDH to extract the event data. For this</span></span><br><span class="line">	<span class="comment">// example, to extract the data, the event must be defined by a MOF class or an instrumentation manifest.</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// Need to get the PointerSize for each event to cover the case where you are consuming events</span></span><br><span class="line">	<span class="comment">// from multiple log files that could have been generated on different architectures. Otherwise,</span></span><br><span class="line">	<span class="comment">// you could have accessed the pointer size when you opened the trace above (see pHeader-&gt;PointerSize).</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (EVENT_HEADER_FLAG_32_BIT_HEADER == (pEventRecord-&gt;EventHeader.Flags &amp; EVENT_HEADER_FLAG_32_BIT_HEADER))</span><br><span class="line">	&#123;</span><br><span class="line">		PointerSize = <span class="number">4</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		PointerSize = <span class="number">8</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (USHORT i = <span class="number">0</span>; i &lt; pInfo-&gt;TopLevelPropertyCount; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//ShowPropertyInfo(pEventRecord, pInfo, &amp;pInfo-&gt;EventPropertyInfoArray[i], NULL);</span></span><br><span class="line">		status = PrintProperties(pEventRecord, pInfo, i, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line">		<span class="keyword">if</span> (ERROR_SUCCESS != status)</span><br><span class="line">		&#123;</span><br><span class="line">			wprintf(<span class="string">L"Printing top level properties failed.\n"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"ETW ********************************************************** end\n\n"</span>);</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> DWORD WINAPI <span class="title">Win32TracingThread</span><span class="params">(LPVOID Parameter)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"processing trace...\n"</span>);</span><br><span class="line">	<span class="keyword">auto</span> ptStatus = ProcessTrace(&amp;traceHandle, <span class="number">1</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (ptStatus != ERROR_SUCCESS &amp;&amp; ptStatus != ERROR_CANCELLED)</span><br><span class="line">	&#123;</span><br><span class="line">		GetLastErrorEx(<span class="string">"ProcessTrace 错误代码"</span>, ptStatus);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span>(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"entering main program...\n"</span>);</span><br><span class="line"></span><br><span class="line">	ZeroMemory(pSessionProperties, bufferSize);</span><br><span class="line">	pSessionProperties-&gt;Wnode.BufferSize = bufferSize;</span><br><span class="line">	pSessionProperties-&gt;Wnode.Flags = WNODE_FLAG_TRACED_GUID;</span><br><span class="line">	pSessionProperties-&gt;Wnode.ClientContext = <span class="number">1</span>; <span class="comment">//QPC clock resolution</span></span><br><span class="line">	pSessionProperties-&gt;Wnode.Guid = SessionGuid;</span><br><span class="line">	pSessionProperties-&gt;FlushTimer = <span class="number">0</span>;</span><br><span class="line">	<span class="comment">//pSessionProperties-&gt;EnableFlags = EVENT_TRACE_FLAG_PROCESS | EVENT_TRACE_FLAG_PROCESS_COUNTERS;</span></span><br><span class="line">	pSessionProperties-&gt;LogFileMode = EVENT_TRACE_REAL_TIME_MODE;</span><br><span class="line">	pSessionProperties-&gt;LogFileNameOffset = <span class="number">0</span>;</span><br><span class="line">	pSessionProperties-&gt;LoggerNameOffset = <span class="keyword">sizeof</span>(EVENT_TRACE_PROPERTIES);</span><br><span class="line">	StringCbCopy((STRSAFE_LPWSTR)((<span class="keyword">char</span>*)pSessionProperties + pSessionProperties-&gt;LoggerNameOffset), <span class="keyword">sizeof</span>(LOGSESSION_NAME), LOGSESSION_NAME);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// stop any previous session</span></span><br><span class="line">	<span class="keyword">auto</span> stopStatus = ControlTrace(<span class="number">0</span>, LOGSESSION_NAME, pSessionProperties, EVENT_TRACE_CONTROL_STOP);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"starting trace...\n"</span>);</span><br><span class="line">	<span class="keyword">auto</span> sTrStatus = StartTrace(<span class="keyword">static_cast</span>&lt;PTRACEHANDLE&gt;(&amp;sessionHandle), LOGSESSION_NAME, pSessionProperties);</span><br><span class="line"></span><br><span class="line">	ENABLE_TRACE_PARAMETERS params&#123;&#125;;</span><br><span class="line">	params.Version = ENABLE_TRACE_PARAMETERS_VERSION_2;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"enabling trace...\n"</span>);</span><br><span class="line">	<span class="keyword">auto</span> eTrExstatus = EnableTraceEx2(sessionHandle, &amp;PROCESS_PROVIDER_GUID,</span><br><span class="line">		EVENT_CONTROL_CODE_ENABLE_PROVIDER,TRACE_LEVEL_INFORMATION, <span class="number">0x10</span>|<span class="number">0x40</span>, <span class="number">0</span>, <span class="number">0</span>, &amp;params);</span><br><span class="line">	<span class="keyword">if</span> (eTrExstatus != ERROR_SUCCESS)</span><br><span class="line">	&#123;</span><br><span class="line">		GetLastErrorEx(<span class="string">"EnableTraceEx2 错误代码"</span>, eTrExstatus);</span><br><span class="line">		ControlTrace(sessionHandle, <span class="literal">nullptr</span>, pSessionProperties, EVENT_TRACE_CONTROL_STOP);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	EVENT_TRACE_LOGFILE loggerInfo = &#123; <span class="number">0</span> &#125;;</span><br><span class="line"></span><br><span class="line">	loggerInfo.ProcessTraceMode = EVENT_TRACE_REAL_TIME_MODE | PROCESS_TRACE_MODE_EVENT_RECORD;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//loggerInfo.BufferCallback = BufferCallback;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// provide a callback whenever we get an event record</span></span><br><span class="line">	loggerInfo.EventRecordCallback = (PEVENT_RECORD_CALLBACK)EventRecordCallback;</span><br><span class="line">	loggerInfo.Context = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	loggerInfo.LoggerName = (WCHAR*)LOGSESSION_NAME;</span><br><span class="line">	loggerInfo.LogFileName = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"opening trace...\n"</span>);</span><br><span class="line">	traceHandle = OpenTrace(&amp;loggerInfo);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// calling thread will be blocked until BufferCallback returns FALSE or all events are delivered</span></span><br><span class="line">	<span class="comment">// or CloseTrace is called</span></span><br><span class="line">	DWORD ThreadID;</span><br><span class="line">	HANDLE ThreadHandle = CreateThread(<span class="number">0</span>, <span class="number">0</span>, Win32TracingThread, <span class="number">0</span>, <span class="number">0</span>, &amp;ThreadID);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">bool</span> exit2 = <span class="literal">false</span>;</span><br><span class="line">	<span class="keyword">while</span> (exit2 == <span class="literal">false</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (GetAsyncKeyState(VK_ESCAPE))</span><br><span class="line">		&#123;</span><br><span class="line">			exit2 = <span class="literal">true</span>;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">"escape pressed, exiting loop...\n"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	CloseHandle(ThreadHandle);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ((TRACEHANDLE)INVALID_HANDLE_VALUE != traceHandle)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"in cleanup...\n"</span>);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"closing trace...\n"</span>);</span><br><span class="line">		<span class="keyword">auto</span> ctStatus = CloseTrace(traceHandle);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">auto</span> cTrStatus = ControlTrace(sessionHandle, <span class="literal">nullptr</span>, pSessionProperties, EVENT_TRACE_CONTROL_STOP);</span><br><span class="line">	<span class="keyword">auto</span> eTrStatus = EnableTraceEx2(sessionHandle, &amp;PROCESS_PROVIDER_GUID, EVENT_CONTROL_CODE_DISABLE_PROVIDER, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">free</span>(pSessionProperties);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我这里主要是监控进程的创建和退出以及dll加载和卸载</p>
+<p>效果如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line">entering main program...</span><br><span class="line">starting trace...</span><br><span class="line">enabling trace...</span><br><span class="line">opening trace...</span><br><span class="line">processing trace...</span><br><span class="line">ETW ********************************************************** start</span><br><span class="line">Id: 6</span><br><span class="line">Version: 0</span><br><span class="line">Channel: 16</span><br><span class="line">Level: 4</span><br><span class="line">Opcode: 0</span><br><span class="line">Task: 6</span><br><span class="line">Keyword: 64</span><br><span class="line">ProviderName: Microsoft-Windows-Kernel-Process</span><br><span class="line">ChannelName: Microsoft-Windows-Kernel-Process/Analytic</span><br><span class="line">KeywordsName: WINEVENT_KEYWORD_IMAGE</span><br><span class="line">TaskName: ImageUnload</span><br><span class="line">ImageBase: 0xc45b0000</span><br><span class="line">ImageSize: 0x32000</span><br><span class="line">ProcessID: 9644</span><br><span class="line">ImageCheckSum: 181919</span><br><span class="line">TimeDateStamp: 1849399745</span><br><span class="line">DefaultBase: 0xc45b0000</span><br><span class="line">ImageName: \Device\HarddiskVolume4\Windows\System32\notepad.exe</span><br><span class="line">ETW ********************************************************** end</span><br><span class="line"></span><br><span class="line">ETW ********************************************************** start</span><br><span class="line">Id: 6</span><br><span class="line">Version: 0</span><br><span class="line">Channel: 16</span><br><span class="line">Level: 4</span><br><span class="line">Opcode: 0</span><br><span class="line">Task: 6</span><br><span class="line">Keyword: 64</span><br><span class="line">ProviderName: Microsoft-Windows-Kernel-Process</span><br><span class="line">ChannelName: Microsoft-Windows-Kernel-Process/Analytic</span><br><span class="line">KeywordsName: WINEVENT_KEYWORD_IMAGE</span><br><span class="line">TaskName: ImageUnload</span><br><span class="line">ImageBase: 0x4be50000</span><br><span class="line">ImageSize: 0xd7000</span><br><span class="line">ProcessID: 9644</span><br><span class="line">ImageCheckSum: 904896</span><br><span class="line">TimeDateStamp: 2571084312</span><br><span class="line">DefaultBase: 0x4be50000</span><br><span class="line">ImageName: \Device\HarddiskVolume4\Windows\System32\efswrt.dll</span><br><span class="line">ETW ********************************************************** end</span><br><span class="line"></span><br><span class="line">ETW ********************************************************** start</span><br><span class="line">Id: 6</span><br><span class="line">Version: 0</span><br><span class="line">Channel: 16</span><br><span class="line">Level: 4</span><br><span class="line">Opcode: 0</span><br><span class="line">Task: 6</span><br><span class="line">Keyword: 64</span><br><span class="line">ProviderName: Microsoft-Windows-Kernel-Process</span><br><span class="line">ChannelName: Microsoft-Windows-Kernel-Process/Analytic</span><br><span class="line">KeywordsName: WINEVENT_KEYWORD_IMAGE</span><br><span class="line">TaskName: ImageUnload</span><br><span class="line">ImageBase: 0x71e00000</span><br><span class="line">ImageSize: 0x153000</span><br><span class="line">ProcessID: 9644</span><br><span class="line">ImageCheckSum: 1397918</span><br><span class="line">TimeDateStamp: 1527226666</span><br><span class="line">DefaultBase: 0x71e00000</span><br><span class="line">ImageName: \Device\HarddiskVolume5\Stardock\Fences\FencesMenu64.dll</span><br><span class="line">ETW ********************************************************** end</span><br><span class="line"></span><br><span class="line">ETW ********************************************************** start</span><br><span class="line">Id: 6</span><br><span class="line">Version: 0</span><br><span class="line">Channel: 16</span><br><span class="line">Level: 4</span><br><span class="line">Opcode: 0</span><br><span class="line">Task: 6</span><br><span class="line">Keyword: 64</span><br><span class="line">ProviderName: Microsoft-Windows-Kernel-Process</span><br><span class="line">ChannelName: Microsoft-Windows-Kernel-Process/Analytic</span><br><span class="line">KeywordsName: WINEVENT_KEYWORD_IMAGE</span><br><span class="line">TaskName: ImageUnload</span><br><span class="line">ImageBase: 0x73730000</span><br><span class="line">ImageSize: 0xbf000</span><br><span class="line">ProcessID: 9644</span><br><span class="line">ImageCheckSum: 796280</span><br><span class="line">TimeDateStamp: 1118443760</span><br><span class="line">DefaultBase: 0x73730000</span><br><span class="line">ImageName: \Device\HarddiskVolume4\Windows\System32\msctfuimanager.dll</span><br><span class="line">ETW ********************************************************** end</span><br><span class="line"></span><br><span class="line">ETW ********************************************************** start</span><br><span class="line">Id: 6</span><br><span class="line">Version: 0</span><br><span class="line">Channel: 16</span><br><span class="line">Level: 4</span><br><span class="line">Opcode: 0</span><br><span class="line">Task: 6</span><br><span class="line">Keyword: 64</span><br><span class="line">ProviderName: Microsoft-Windows-Kernel-Process</span><br><span class="line">ChannelName: Microsoft-Windows-Kernel-Process/Analytic</span><br><span class="line">KeywordsName: WINEVENT_KEYWORD_IMAGE</span><br><span class="line">TaskName: ImageUnload</span><br><span class="line">ImageBase: 0x79530000</span><br><span class="line">ImageSize: 0x270000</span><br><span class="line">ProcessID: 9644</span><br><span class="line">ImageCheckSum: 2550189</span><br><span class="line">TimeDateStamp: 3941062522</span><br><span class="line">DefaultBase: 0x79530000</span><br><span class="line">ImageName: \Device\HarddiskVolume4\Windows\System32\UIAutomationCore.dll</span><br><span class="line">ETW ********************************************************** end</span><br></pre></td></tr></table></figure>
+
+<p>不过自己写ETW最难受的地方就是在解析事件信息那里，那个地方需要判断数据类型然后在根据不同的类型做不同的解析，如果不是为了学习ETW的机制推荐使用微软的Krabsetw库</p>
+<h3 id="使用Krabsetw库监控进程启动和退出"><a href="#使用Krabsetw库监控进程启动和退出" class="headerlink" title="使用Krabsetw库监控进程启动和退出"></a>使用Krabsetw库监控进程启动和退出</h3><p>代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"packages/Microsoft.O365.Security.Krabsetw.4.1.18/lib/native/include/krabs.hpp"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// Setup basic Microsoft-Windows-Kernel-Process trace</span></span><br><span class="line">	krabs::<span class="function">user_trace <span class="title">trace</span><span class="params">(<span class="string">L"My magic trace"</span>)</span></span>;</span><br><span class="line">	krabs::provider&lt;&gt; provider(krabs::guid(<span class="string">L"&#123;22FB2CD6-0E7B-422B-A0C7-2FAD1FD0E716&#125;"</span>));</span><br><span class="line"></span><br><span class="line">	provider.any(<span class="number">0x10</span>);</span><br><span class="line"></span><br><span class="line">	krabs::predicates::id_is eventid_is_1 = krabs::predicates::id_is(<span class="number">1</span>);</span><br><span class="line">	krabs::predicates::id_is eventid_is_2 = krabs::predicates::id_is(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">	krabs::<span class="function">event_filter <span class="title">filter</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">		krabs::predicates::any_of(&#123;</span></span></span><br><span class="line"><span class="function"><span class="params">			&amp;eventid_is_1,</span></span></span><br><span class="line"><span class="function"><span class="params">			&amp;eventid_is_2,</span></span></span><br><span class="line"><span class="function"><span class="params">			&#125;)</span></span></span><br><span class="line"><span class="function"><span class="params">			)</span></span>;</span><br><span class="line"></span><br><span class="line">	filter.add_on_event_callback([](<span class="keyword">const</span> EVENT_RECORD&amp; record, <span class="keyword">const</span> krabs::trace_context&amp; trace_context) &#123;</span><br><span class="line">		krabs::schema schema(record, trace_context.schema_locator);</span><br><span class="line">		krabs::parser parser(schema);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Event ID: %d || Opcode: %d || Version %d\n"</span>, schema.event_id(), schema.event_opcode(), schema.event_version());</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (schema.event_id() == <span class="number">1</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">uint32_t</span> pid = parser.parse&lt;<span class="keyword">uint32_t</span>&gt;(<span class="string">L"ProcessID"</span>);</span><br><span class="line">			<span class="keyword">uint32_t</span> ParentProcessID = parser.parse&lt;<span class="keyword">uint32_t</span>&gt;(<span class="string">L"ParentProcessID"</span>);</span><br><span class="line">			<span class="built_in">std</span>::wstring image_name = parser.parse&lt;<span class="built_in">std</span>::wstring&gt;(<span class="string">L"ImageName"</span>);</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; schema.provider_name();</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" etw id="</span>;</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; schema.event_id();</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" task_name="</span> &lt;&lt; schema.task_name();</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" ProcessID="</span> &lt;&lt; pid;</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" ImageName="</span> &lt;&lt; image_name;</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" ParentProcessID="</span> &lt;&lt; ParentProcessID;</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span>(schema.event_id() == <span class="number">2</span>)</span><br><span class="line">		&#123;</span><br><span class="line">		    <span class="keyword">uint32_t</span> pid = parser.parse&lt;<span class="keyword">uint32_t</span>&gt;(<span class="string">L"ProcessID"</span>);</span><br><span class="line">		    <span class="keyword">uint32_t</span> ExitCode = parser.parse&lt;<span class="keyword">uint32_t</span>&gt;(<span class="string">L"ExitCode"</span>);</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; schema.provider_name();</span><br><span class="line">		    <span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" etw id="</span>;</span><br><span class="line">		    <span class="built_in">std</span>::wcout &lt;&lt; schema.event_id();</span><br><span class="line">		    <span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" task_name="</span> &lt;&lt; schema.task_name();</span><br><span class="line">		    <span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" ProcessID="</span> &lt;&lt; pid;</span><br><span class="line">		    <span class="built_in">std</span>::wcout &lt;&lt; <span class="string">L" ExitCode="</span> &lt;&lt; ExitCode;</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="string">"\n"</span>;</span><br><span class="line">			<span class="built_in">std</span>::wcout &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Start ETW Session</span></span><br><span class="line">	provider.add_filter(filter);</span><br><span class="line">	trace.enable(provider);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"Starting trace...\n"</span>);</span><br><span class="line">	trace.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>效果如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Starting trace...</span><br><span class="line">Event ID: 1 || Opcode: 1 || Version 3</span><br><span class="line">Microsoft-Windows-Kernel-Process etw id=1 task_name=ProcessStart ProcessID=28208 ImageName=\Device\HarddiskVolume4\Windows\System32\notepad.exe ParentProcessID=20668</span><br><span class="line"></span><br><span class="line">Event ID: 2 || Opcode: 2 || Version 2</span><br><span class="line">Microsoft-Windows-Kernel-Process etw id=2 task_name=ProcessStop ProcessID=28208 ExitCode=0</span><br></pre></td></tr></table></figure>
+
+<p>在这里顺便提一下关于ETW绕过的问题，用EtwExplorer可以查看ETW事件提供者，你能看到系统中有很多的提供者，其中大部分提供者运行于R3层对于这种直接修补Advapi32.dll!EventWrite函数即可（在Win高版本上Advapi32.dll!EventWrite是直接转发到ntdll.dll!EtwEventWrite函数上的）这是一种，另一种更为优雅的bypass方式是找到 EventRegister 函数注册的句柄，然后直接调用 EventUnregister 函数关闭这个句柄这样即使调用EtwEventWrite函数也毫无作用，同时还有一些以Microsoft-Windows-Kernel-XXXXXX名字开头的提供者是内核提供者它们运行于R0进行记录，对于这些提供者在R3来说一般是无法绕过的。对于防御者来说应该尽量使用内核提供者它们更加可靠不容易被绕过。</p>
+<h3 id="后话"><a href="#后话" class="headerlink" title="后话"></a>后话</h3><p>其实最开始想非常细致的写ETW中的知识点，而且确实也写了一些但是写到后面发现要写的实在是太多了还是鸽了吧，等有机会再说吧，</p>
+<p>相关参考<br><a href="https://docs.microsoft.com/zh-cn/windows/win32/etw/using-tdhgetproperty-to-consume-event-data" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/windows/win32/etw/using-tdhgetproperty-to-consume-event-data</a><br><a href="https://stackoverflow.com/questions/61197136/not-receiving-microsoft-windows-kernel-process-events-from-real-time-etw-consume" target="_blank" rel="noopener">https://stackoverflow.com/questions/61197136/not-receiving-microsoft-windows-kernel-process-events-from-real-time-etw-consume</a><br><a href="https://github.com/microsoft/krabsetw" target="_blank" rel="noopener">https://github.com/microsoft/krabsetw</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ETW/" rel="tag"># ETW</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/05/某驱动脱壳 vmp/" rel="next" title="某驱动脱壳 vmp">
+                <i class="fa fa-chevron-left"></i> 某驱动脱壳 vmp
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/27/一份未完成的cobalt-strike-beacon代码/" rel="prev" title="一份未完成的cobalt strike beacon代码">
+                一份未完成的cobalt strike beacon代码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="WBGlIl">
+            
+              <p class="site-author-name" itemprop="name">WBGlIl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                大佬们的博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.sariel.top/" title="只因不值得" target="_blank">只因不值得</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://422926799.github.io/" title="九世" target="_blank">九世</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ggsec.cn/" title="Demon" target="_blank">Demon</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.secist.com/" title="即刻安全" target="_blank">即刻安全</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nek0y4nsu.github.io/" title="Yansu" target="_blank">Yansu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blue-bird1.github.io/" title="青鸟" target="_blank">青鸟</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qwq.moe/" title="蚊子の博客" target="_blank">蚊子の博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://9bie.org/" title="biebie" target="_blank">biebie</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Krabsetw库监控进程启动和退出"><span class="nav-number">2.</span> <span class="nav-text">使用Krabsetw库监控进程启动和退出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后话"><span class="nav-number">3.</span> <span class="nav-text">后话</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WBGlIl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+
+

